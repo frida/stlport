@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-04-13 21:59:32 ptr>
+// -*- C++ -*- Time-stamp: <2012-05-28 15:27:37 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -73,6 +73,7 @@
 #include "chrono_test.h"
 #include "null_ptr.h"
 #include "thread_test.h"
+#include "atomic_test.h"
 
 int main( int argc, const char** argv )
 {
@@ -956,6 +957,10 @@ int main( int argc, const char** argv )
 
   t.add( &locale_test::default_locale, ltest, "default_locale" );
   t.add( &locale_test::combine, ltest, "combine" );
+
+  atomic_test test_atomic;
+
+  t.add( &atomic_test::atomic_int, test_atomic, "atomic int" );
 
   thread_test test_thr;
   exam::test_suite::test_case_type thr_tc[10];

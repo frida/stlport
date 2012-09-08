@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-01-19 08:32:20 ptr>
+// -*- C++ -*- Time-stamp: <2012-05-28 20:40:54 ptr>
 
 /*
  * Copyright (c) 2011
@@ -27,10 +27,6 @@
 #include <inttypes.h>
 #include <unistd.h>
 #include <stddef.h>
-
-#ifndef noexcept
-#  define noexcept
-#endif
 
 _STLP_BEGIN_NAMESPACE
 
@@ -387,18 +383,76 @@ T* atomic_fetch_sub_explicit(atomic<T*>*, ptrdiff_t, memory_order) noexcept;
 #define ATOMIC_VAR_INIT(value) see below
 
 // 29.7, flag type and operations
-struct atomic_flag;
+// struct atomic_flag;
 
-bool atomic_flag_test_and_set(volatile atomic_flag*) noexcept;
-bool atomic_flag_test_and_set(atomic_flag*) noexcept;
-bool atomic_flag_test_and_set_explicit(volatile atomic_flag*, memory_order) noexcept;
-bool atomic_flag_test_and_set_explicit(atomic_flag*, memory_order) noexcept;
-void atomic_flag_clear(volatile atomic_flag*) noexcept;
-void atomic_flag_clear(atomic_flag*) noexcept;
-void atomic_flag_clear_explicit(volatile atomic_flag*, memory_order) noexcept;
-void atomic_flag_clear_explicit(atomic_flag*, memory_order) noexcept;
+struct atomic_flag
+{
+    bool test_and_set( memory_order order = memory_order_seq_cst ) volatile noexcept
+      {
+        if ( order == memory_order_seq_cst ) {
+          __sync_synchronize();
+        }
+//#if (ATOMIC_BOOL_LOCK_FREE == 2)
+//#else
+        return __sync_lock_test_and_set( &value, 1 );
+//#endif
+      }
 
-#define ATOMIC_FLAG_INIT see below
+    bool test_and_set( memory_order order = memory_order_seq_cst ) noexcept
+      {
+        if ( order == memory_order_seq_cst ) {
+          __sync_synchronize();
+        }
+        return __sync_lock_test_and_set( &value, 1 );
+      }
+
+    void clear( memory_order order = memory_order_seq_cst ) volatile noexcept
+      {
+        /* order != memory_order_acquire */
+        /* order != memory_order_acq_rel */
+        __sync_lock_release( &value );
+        if ( order == memory_order_seq_cst ) {
+          __sync_synchronize();
+        }
+      }
+
+    void clear( memory_order order = memory_order_seq_cst ) noexcept
+      {
+        /* order != memory_order_acquire */
+        /* order != memory_order_acq_rel */
+        __sync_lock_release( &value );
+        if ( order == memory_order_seq_cst ) {
+          __sync_synchronize();
+        }
+      }
+
+    atomic_flag() noexcept = default;
+    atomic_flag( const atomic_flag& ) = delete;
+    atomic_flag& operator =( const atomic_flag& ) = delete;
+    atomic_flag& operator =( const atomic_flag& ) volatile = delete;
+
+    bool value;
+};
+
+#define ATOMIC_FLAG_INIT { false }
+
+inline bool atomic_flag_test_and_set(volatile atomic_flag* a) noexcept
+{ return a->test_and_set(); }
+inline bool atomic_flag_test_and_set(atomic_flag* a) noexcept
+{ return a->test_and_set(); }
+bool atomic_flag_test_and_set_explicit(volatile atomic_flag* a, memory_order order) noexcept
+{ return a->test_and_set(order); }
+inline bool atomic_flag_test_and_set_explicit(atomic_flag* a, memory_order order) noexcept
+{ return a->test_and_set(order); }
+inline void atomic_flag_clear(volatile atomic_flag* a) noexcept
+{ a->clear(); }
+void atomic_flag_clear(atomic_flag* a) noexcept
+{ a->clear(); }
+inline void atomic_flag_clear_explicit(volatile atomic_flag* a, memory_order order) noexcept
+{ a->clear(order); }
+inline void atomic_flag_clear_explicit(atomic_flag* a, memory_order order) noexcept
+{ a->clear(order); }
+
 // 29.8, fences
 extern "C" void atomic_thread_fence(memory_order) noexcept;
 extern "C" void atomic_signal_fence(memory_order) noexcept;
@@ -406,9 +460,14 @@ extern "C" void atomic_signal_fence(memory_order) noexcept;
 template <class T>
 struct atomic
 {
-    bool is_lock_free() const volatile noexcept;
-    bool is_lock_free() const noexcept;
-    void store(T, memory_order = memory_order_seq_cst) volatile noexcept;
+    bool is_lock_free() const volatile noexcept
+      { return false; }
+    bool is_lock_free() const noexcept
+      { return false; }
+    void store(T, memory_order = memory_order_seq_cst) volatile noexcept
+      {
+        T* p = &value;
+      }
     void store(T, memory_order = memory_order_seq_cst) noexcept;
     T load(memory_order = memory_order_seq_cst) const volatile noexcept;
     T load(memory_order = memory_order_seq_cst) const noexcept;
@@ -425,27 +484,77 @@ struct atomic
     bool compare_exchange_strong(T&, T, memory_order = memory_order_seq_cst) volatile noexcept;
     bool compare_exchange_strong(T&, T, memory_order = memory_order_seq_cst) noexcept;
     atomic() noexcept = default;
-    /* constexpr */ atomic(T) noexcept;
+    constexpr atomic(T) noexcept;
     atomic(const atomic&) = delete;
     atomic& operator=(const atomic&) = delete;
     atomic& operator=(const atomic&) volatile = delete;
     T operator=(T) volatile noexcept;
     T operator=(T) noexcept;
+
+    T value;
 };
 
 template <>
-struct atomic<int>
+class atomic<int>
 {
+  private:
     typedef int integral;
 
-    bool is_lock_free() const volatile noexcept;
-    bool is_lock_free() const noexcept;
-    void store(integral, memory_order = memory_order_seq_cst) volatile noexcept;
-    void store(integral, memory_order = memory_order_seq_cst) noexcept;
+  public:
+    bool is_lock_free() const volatile noexcept
+      {
+#if (ATOMIC_INT_LOCK_FREE == 2)
+        return true;
+#endif
+      }
+    bool is_lock_free() const noexcept
+      {
+#if (ATOMIC_INT_LOCK_FREE == 2)
+        return true;
+#endif
+      }
+    void store(integral v, memory_order order = memory_order_seq_cst) volatile noexcept
+      {
+        /* order != memory_order_acquire */
+        /* order != memory_order_acq_rel */
+        /* order != memory_order_consume */
+        
+        // if ( order >=  memory_order_acq_rel ) {
+        //   __sync_synchronize();
+        // }
+#if (ATOMIC_INT_LOCK_FREE == 2)
+        if ( (order == memory_order_seq_cst) || (order == memory_order_release) ) {
+          __sync_lock_test_and_set( &value, v );
+        } else {
+          value = v;
+        }
+#else
+#endif
+      }
+    void store(integral v, memory_order order = memory_order_seq_cst) noexcept
+      {
+        /* order != memory_order_acquire */
+        /* order != memory_order_acq_rel */
+        /* order != memory_order_consume */
+        
+        // if ( order >=  memory_order_acq_rel ) {
+        //   __sync_synchronize();
+        // }
+#if (ATOMIC_INT_LOCK_FREE == 2)
+        if ( order == memory_order_seq_cst ) {
+          __sync_lock_test_and_set( &value, v );
+        } else {
+          value = v;
+        }
+#else
+#endif
+      }
     integral load(memory_order = memory_order_seq_cst) const volatile noexcept;
     integral load(memory_order = memory_order_seq_cst) const noexcept;
-    operator integral() const volatile noexcept;
-    operator integral() const noexcept;
+    operator integral() const volatile noexcept
+      { return load(); }
+    operator integral() const noexcept
+      { return load(); }
     integral exchange(integral, memory_order = memory_order_seq_cst) volatile noexcept;
     integral exchange(integral, memory_order = memory_order_seq_cst) noexcept;
     bool compare_exchange_weak(integral&, integral, memory_order, memory_order) volatile noexcept;
@@ -468,7 +577,7 @@ struct atomic<int>
     integral fetch_xor(integral, memory_order = memory_order_seq_cst) noexcept;
 
     atomic() noexcept = default;
-    /* constexpr */ atomic(integral) noexcept;
+    constexpr atomic(integral) noexcept;
     atomic(const atomic&) = delete;
 
     atomic& operator=(const atomic&) = delete;
@@ -495,8 +604,9 @@ struct atomic<int>
     integral operator|=(integral) noexcept;
     integral operator^=(integral) volatile noexcept;
     integral operator^=(integral) noexcept;
-};
 
+    integral value;
+};
 
 _STLP_END_NAMESPACE
 

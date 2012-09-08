@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-01-06 12:07:04 ptr>
+// -*- C++ -*- Time-stamp: <2012-05-28 15:14:51 ptr>
 
 /*
  * Copyright (c) 2011
@@ -26,6 +26,7 @@ class atomic_test
 {
   public:
   // int EXAM_DECL(align);
+    int EXAM_DECL(atomic_int);
 };
 
 #endif // __TEST_ATOMIC_TEST_H

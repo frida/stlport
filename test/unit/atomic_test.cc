@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-01-06 12:07:39 ptr>
+// -*- C++ -*- Time-stamp: <2012-05-28 15:35:09 ptr>
 
 /*
  * Copyright (c) 2011
@@ -16,3 +16,17 @@
  */
 
 #include <atomic>
+#include "atomic_test.h"
+
+int EXAM_IMPL(atomic_test::atomic_int)
+{
+  // int val = -1;
+
+  std::atomic<int> ai;
+
+  ai.store( -1 );
+
+  EXAM_CHECK( ai.value == -1 );
+  
+  return EXAM_RESULT;
+}

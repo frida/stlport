@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-03-02 14:09:35 ptr>
+// -*- C++ -*- Time-stamp: <2012-09-16 12:19:55 ptr>
 
 /*
  * Copyright (c) 2006-2012
@@ -246,14 +246,16 @@ int EXAM_IMPL(thread_test::condition_var)
   val = 0;
   
   std::thread t( thread_func5 );
+
+  {
+    std::unique_lock<std::mutex> lk( cond_mtx );
   
-  std::unique_lock<std::mutex> lk( cond_mtx );
-  
-  EXAM_CHECK( cnd.wait_for( lk, std::chrono::milliseconds(500), true_val() ) );
-  
-  EXAM_CHECK( val == 1 );
+    EXAM_CHECK( cnd.wait_for( lk, std::chrono::milliseconds(500), true_val() ) );
+  }
   
   t.join();
+
+  EXAM_CHECK( val == 1 );
   
   val = 0;
   

@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-03-02 15:29:29 ptr>
+// -*- C++ -*- Time-stamp: <2012-10-03 19:04:26 ptr>
 
 /*
  * Copyright (c) 1997-1999, 2002-2012
@@ -50,15 +50,14 @@ class __condition_variable
         _cond = CreateEvent( 0, TRUE, TRUE, 0 );
 #endif
 #ifdef _STLP_PTHREADS
+        pthread_condattr_t attr;
+        pthread_condattr_init( &attr );
         if ( SCOPE ) {
-          pthread_condattr_t attr;
-          pthread_condattr_init( &attr );
           pthread_condattr_setpshared( &attr, PTHREAD_PROCESS_SHARED );
-          pthread_cond_init( &_cond, &attr );
-          pthread_condattr_destroy( &attr );
-        } else {
-          pthread_cond_init( &_cond, 0 );
         }
+        pthread_condattr_setclock( &attr, CLOCK_MONOTONIC );
+        pthread_cond_init( &_cond, &attr );
+        pthread_condattr_destroy( &attr );
 #endif
       }
 
@@ -128,6 +127,32 @@ class __condition_variable
     template <bool RECURSIVE_SAFE, class Clock, class Duration>
     cv_status wait_until( unique_lock<__mutex<RECURSIVE_SAFE,SCOPE> >& lock,
                           const chrono::time_point<Clock, Duration>& abs_time )
+      {
+#ifdef _STLP_PTHREADS
+        // convert abs_time to steady_clock
+        chrono::time_point<chrono::steady_clock, Duration> steady_abs_time;
+        chrono::nanoseconds delta = chrono::time_point<Clock, Duration>::clock::now() - chrono::time_point<chrono::steady_clock, Duration>::clock::now();
+        chrono::time_point<chrono::steady_clock, Duration> new_abs_time( (abs_time - delta).time_since_epoch() );
+
+        chrono::seconds s = chrono::duration_cast<chrono::seconds>( new_abs_time.time_since_epoch() );
+        ::timespec ts;
+        ts.tv_sec = s.count();
+        ts.tv_nsec = chrono::duration_cast<chrono::nanoseconds>( new_abs_time.time_since_epoch() - s ).count();
+        int ret = pthread_cond_timedwait( &_cond, const_cast<pthread_mutex_t *>(&lock.m->_M_lock), &ts );
+        if ( ret != 0 ) {
+          if ( ret == ETIMEDOUT ) {
+            return timeout;
+          }
+          throw _STLP_STD::system_error( ret, _STLP_STD::get_posix_category() );
+        }
+
+        return no_timeout;
+#endif
+      }
+
+    template <bool RECURSIVE_SAFE, class Duration>
+    cv_status wait_until( unique_lock<__mutex<RECURSIVE_SAFE,SCOPE> >& lock,
+                          const chrono::time_point<chrono::steady_clock, Duration>& abs_time )
       {
 #ifdef _STLP_PTHREADS
         chrono::seconds s = chrono::duration_cast<chrono::seconds>( abs_time.time_since_epoch() );
@@ -217,15 +242,14 @@ class __condition_variable_any
         _cond = CreateEvent( 0, TRUE, TRUE, 0 );
 #endif
 #ifdef _STLP_PTHREADS
+        pthread_condattr_t attr;
+        pthread_condattr_init( &attr );
         if ( SCOPE ) {
-          pthread_condattr_t attr;
-          pthread_condattr_init( &attr );
           pthread_condattr_setpshared( &attr, PTHREAD_PROCESS_SHARED );
-          pthread_cond_init( &_cond, &attr );
-          pthread_condattr_destroy( &attr );
-        } else {
-          pthread_cond_init( &_cond, 0 );
         }
+        pthread_condattr_setclock( &attr, CLOCK_MONOTONIC );
+        pthread_cond_init( &_cond, &attr );
+        pthread_condattr_destroy( &attr );
 #endif
       }
 
@@ -295,6 +319,31 @@ class __condition_variable_any
     template <class Lock, class Clock, class Duration>
     cv_status wait_until( Lock& lock,
                           const chrono::time_point<Clock, Duration>& abs_time )
+      {
+#ifdef _STLP_PTHREADS
+        // convert abs_time to steady_clock
+        chrono::time_point<chrono::steady_clock, Duration> steady_abs_time;
+        chrono::nanoseconds delta = chrono::time_point<Clock, Duration>::clock::now() - chrono::time_point<chrono::steady_clock, Duration>::clock::now();
+        chrono::time_point<chrono::steady_clock, Duration> new_abs_time( (abs_time - delta).time_since_epoch() );
+
+        chrono::seconds s = chrono::duration_cast<chrono::seconds>( new_abs_time.time_since_epoch() );
+        ::timespec ts;
+        ts.tv_sec = s.count();
+        ts.tv_nsec = chrono::duration_cast<chrono::nanoseconds>( new_abs_time.time_since_epoch() - s ).count();
+        int ret = pthread_cond_timedwait( &_cond, lock.native_handle(), &ts );
+        if ( ret != 0 ) {
+          if ( ret == ETIMEDOUT ) {
+            return timeout;
+          }
+          throw _STLP_STD::system_error( ret, _STLP_STD::get_posix_category() );
+        }
+#endif
+        return no_timeout;
+      }
+
+    template <class Lock, class Duration>
+    cv_status wait_until( Lock& lock,
+                          const chrono::time_point<chrono::steady_clock, Duration>& abs_time )
       {
 #ifdef _STLP_PTHREADS
         chrono::seconds s = chrono::duration_cast<chrono::seconds>( abs_time.time_since_epoch() );

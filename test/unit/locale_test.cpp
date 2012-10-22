@@ -1179,7 +1179,7 @@ static const ref_monetary monetary_tested_locales[] = {
 #    else
                                                                                                             " " },
 #    endif
-  { "ru_RU.koi8r", "RUB ",           "RUR ",               "",           "\xd2\xd5\xc2", ".",               " " },
+  { "ru_RU.koi8r", "RUB ",           "RUR ",               "",           "\xd2\xd5\xc2", ".",               "\x9a" },
   { "en_GB",       "GBP ",           "",                   "\xa3",       "",           ".",                 "," },
   { "en_US",       "USD ",           "",                   "$",          "",           ".",                 "," },
   { "C",           "",               "",                   "",           "",           " ",                 " " },

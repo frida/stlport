@@ -67,9 +67,9 @@ class locale_test
     static const ref_monetary* _get_ref_monetary(size_t);
     static const char* _get_ref_monetary_name(const ref_monetary*);
 
-    void _money_put_get( const std::locale&, const ref_monetary* );
-    void _money_put_get2( const std::locale& loc, const std::locale& streamLoc, const ref_monetary* );
-    void _money_put_X_bug( const std::locale&, const ref_monetary* );
+    int _money_put_get( const std::locale&, const ref_monetary* );
+    int _money_put_get2( const std::locale& loc, const std::locale& streamLoc, const ref_monetary* );
+    int _money_put_X_bug( const std::locale&, const ref_monetary* );
 };
 
 #endif // __TEST_EXCEPTION_TEST_H

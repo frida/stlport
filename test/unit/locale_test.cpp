@@ -301,13 +301,13 @@ int EXAM_IMPL(locale_test::combine)
         loc = loc.combine<money_get<char> >(loc2);
 
         //Check loc has the correct facets:
-        _money_put_get2(loc2, loc, _get_ref_monetary(i));
+        EXAM_CHECK( _money_put_get2(loc2, loc, _get_ref_monetary(i)) == 0 );
 
         //Check loc1 has not been impacted:
-        _money_put_get2(loc1, loc1, _get_ref_monetary(loc1_index));
+        EXAM_CHECK( _money_put_get2(loc1, loc1, _get_ref_monetary(loc1_index)) == 0 );
 
         //Check loc2 has not been impacted:
-        _money_put_get2(loc2, loc2, _get_ref_monetary(i));
+        EXAM_CHECK( _money_put_get2(loc2, loc2, _get_ref_monetary(i)) == 0 );
       }
       {
         //We check that resulting locale has not wrongly acquire loc1 facets that hasn't been combine:
@@ -316,13 +316,13 @@ int EXAM_IMPL(locale_test::combine)
         loc = loc.combine<time_get<char> >(loc1);
 
         //Check loc has the correct facets:
-        _money_put_get2(loc2, loc, _get_ref_monetary(i));
+        EXAM_CHECK( _money_put_get2(loc2, loc, _get_ref_monetary(i)) == 0 );
 
         //Check loc1 has not been impacted:
-        _money_put_get2(loc1, loc1, _get_ref_monetary(loc1_index));
+        EXAM_CHECK( _money_put_get2(loc1, loc1, _get_ref_monetary(loc1_index)) == 0 );
 
         //Check loc2 has not been impacted:
-        _money_put_get2(loc2, loc2, _get_ref_monetary(i));
+        EXAM_CHECK( _money_put_get2(loc2, loc2, _get_ref_monetary(i)) == 0 );
       }
 
       {
@@ -1199,17 +1199,19 @@ const char* locale_test::_get_ref_monetary_name(const ref_monetary* _ref)
   return _ref->name;
 }
 
-void locale_test::_money_put_get( const locale& loc, const ref_monetary* rl )
+int locale_test::_money_put_get( const locale& loc, const ref_monetary* rl )
 {
-  _money_put_get2(loc, loc, rl);
+  return _money_put_get2(loc, loc, rl);
 }
 
-void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, const ref_monetary* prl )
+int locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, const ref_monetary* prl )
 {
+  int tres = 0;
+
   const ref_monetary &rl = *prl;
-  EXAM_CHECK_ASYNC( has_facet<money_put<char> >(loc) );
+  EXAM_CHECK_ASYNC_F( has_facet<money_put<char> >(loc), tres );
   money_put<char> const& fmp = use_facet<money_put<char> >(loc);
-  EXAM_CHECK_ASYNC( has_facet<money_get<char> >(loc) );
+  EXAM_CHECK_ASYNC_F( has_facet<money_get<char> >(loc), tres );
   money_get<char> const& fmg = use_facet<money_get<char> >(loc);
 
   ostringstream ostr;
@@ -1221,12 +1223,12 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
     string str_res;
     //money_put
     {
-      EXAM_CHECK_ASYNC( (has_facet<moneypunct<char, true> >(loc)) );
+      EXAM_CHECK_ASYNC_F( (has_facet<moneypunct<char, true> >(loc)), tres );
       moneypunct<char, true> const& intl_fmp = use_facet<moneypunct<char, true> >(loc);
 
       ostreambuf_iterator<char, char_traits<char> > res = fmp.put(ostr, true, ostr, ' ', 123456);
 
-      EXAM_CHECK_ASYNC( !res.failed() );
+      EXAM_CHECK_ASYNC_F( !res.failed(), tres );
       str_res = ostr.str();
       //EXAM_MESSAGE(str_res.c_str());
 
@@ -1252,11 +1254,11 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
        */
       string::size_type p = strlen( rl.money_int_prefix );
       if (p != 0) {
-        EXAM_CHECK_ASYNC( intl_fmp.pos_format().field[fieldIndex] == money_base::symbol );
+        EXAM_CHECK_ASYNC_F( intl_fmp.pos_format().field[fieldIndex] == money_base::symbol, tres );
         string::size_type p_old = strlen( rl.money_int_prefix_old );
-        EXAM_CHECK_ASYNC( (str_res.substr(index, p) == rl.money_int_prefix) ||
+        EXAM_CHECK_ASYNC_F( (str_res.substr(index, p) == rl.money_int_prefix) ||
                         ((p_old != 0) &&
-                         (str_res.substr(index, p_old) == rl.money_int_prefix_old)) );
+                         (str_res.substr(index, p_old) == rl.money_int_prefix_old)), tres );
         if ( str_res.substr(index, p) == rl.money_int_prefix ) {
           index += p;
         } else {
@@ -1280,18 +1282,18 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
       }
 
       // value
-      EXAM_CHECK_ASYNC( str_res[index++] == '1' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '1', tres );
       if (!intl_fmp.grouping().empty()) {
-        EXAM_CHECK_ASYNC( str_res[index++] == /* intl_fmp.thousands_sep() */ *rl.money_thousands_sep );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == /* intl_fmp.thousands_sep() */ *rl.money_thousands_sep, tres );
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '2' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '3' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '4' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '2', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '3', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '4', tres );
       if (intl_fmp.frac_digits() != 0) {
-        EXAM_CHECK_ASYNC( str_res[index++] == /* intl_fmp.decimal_point() */ *rl.money_decimal_point );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == /* intl_fmp.decimal_point() */ *rl.money_decimal_point, tres );
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '5' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '6' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '5', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '6', tres );
       ++fieldIndex;
 
       // sign
@@ -1301,7 +1303,7 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
 
       // space
       if (intl_fmp.pos_format().field[fieldIndex] == money_base::space ) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
 
@@ -1312,7 +1314,7 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
 
       //as space cannot be last the only left format can be none:
       while ( fieldIndex < 3 ) {
-        EXAM_CHECK_ASYNC( intl_fmp.pos_format().field[fieldIndex] == money_base::none );
+        EXAM_CHECK_ASYNC_F( intl_fmp.pos_format().field[fieldIndex] == money_base::none, tres );
         ++fieldIndex;
       }
     }
@@ -1326,22 +1328,22 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
       ostr.str( "" );
       ostr.clear();
       fmg.get(istr, istreambuf_iterator<char, char_traits<char> >(), true, ostr, err, digits);
-      EXAM_CHECK_ASYNC( (err & (ios_base::failbit | ios_base::badbit)) == 0 );
-      EXAM_CHECK_ASYNC( digits == "123456" );
+      EXAM_CHECK_ASYNC_F( (err & (ios_base::failbit | ios_base::badbit)) == 0, tres );
+      EXAM_CHECK_ASYNC_F( digits == "123456", tres );
     }
   }
 
   ostr.str("");
   //Check a negative value (national format)
   {
-    EXAM_CHECK_ASYNC( (has_facet<moneypunct<char, false> >(loc)) );
+    EXAM_CHECK_ASYNC_F( (has_facet<moneypunct<char, false> >(loc)), tres );
     moneypunct<char, false> const& dom_fmp = use_facet<moneypunct<char, false> >(loc);
     string str_res;
     //Check money_put
     {
       ostreambuf_iterator<char, char_traits<char> > res = fmp.put(ostr, false, ostr, ' ', -123456);
 
-      EXAM_CHECK_ASYNC( !res.failed() );
+      EXAM_CHECK_ASYNC_F( !res.failed(), tres );
       str_res = ostr.str();
       //CPPUNIT_MESSAGE(str_res.c_str());
 
@@ -1349,51 +1351,51 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
       size_t index = 0;
 
       if (dom_fmp.neg_format().field[fieldIndex] == money_base::sign) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, dom_fmp.negative_sign().size()) == dom_fmp.negative_sign() );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, dom_fmp.negative_sign().size()) == dom_fmp.negative_sign(), tres );
         index += dom_fmp.negative_sign().size();
         ++fieldIndex;
       }
 
       string::size_type p = strlen( rl.money_prefix );
       if (p != 0) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, p) == rl.money_prefix );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, p) == rl.money_prefix, tres );
         index += p;
         ++fieldIndex;
       }
       if (dom_fmp.neg_format().field[fieldIndex] == money_base::space ||
           dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
 
-      EXAM_CHECK_ASYNC( str_res[index++] == '1' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '1', tres );
       if (!dom_fmp.grouping().empty()) {
-        EXAM_CHECK_ASYNC( str_res[index++] == dom_fmp.thousands_sep() );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == dom_fmp.thousands_sep(), tres );
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '2' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '3' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '4' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '2', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '3', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '4', tres );
       if (dom_fmp.frac_digits() != 0) {
-        EXAM_CHECK_ASYNC( str_res[index++] == dom_fmp.decimal_point() );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == dom_fmp.decimal_point(), tres );
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '5' );
-      EXAM_CHECK_ASYNC( str_res[index++] == '6' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '5', tres );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '6', tres );
       ++fieldIndex;
 
       //space cannot be last:
       if ((fieldIndex < 3) &&
           dom_fmp.neg_format().field[fieldIndex] == money_base::space) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
 
       if (fieldIndex == 3) {
         //If none is last we should not add anything to the resulting string:
         if (dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-          EXAM_CHECK_ASYNC( index == str_res.size() );
+          EXAM_CHECK_ASYNC_F( index == str_res.size(), tres );
         } else {
-          EXAM_CHECK_ASYNC( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol );
-          EXAM_CHECK_ASYNC( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix );
+          EXAM_CHECK_ASYNC_F( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol, tres );
+          EXAM_CHECK_ASYNC_F( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix, tres );
         }
       }
     }
@@ -1409,16 +1411,18 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
 
       istringstream istr(str_res);
       fmg.get(istr, istreambuf_iterator<char, char_traits<char> >(), false, ostr, err, val);
-      EXAM_CHECK_ASYNC( (err & (ios_base::failbit | ios_base::badbit)) == 0 );
+      EXAM_CHECK_ASYNC_F( (err & (ios_base::failbit | ios_base::badbit)) == 0, tres );
       if (dom_fmp.negative_sign().empty()) {
         //Without negative sign there is no way to guess the resulting amount sign ("C" locale):
-        EXAM_CHECK_ASYNC( val == 123456 );
+        EXAM_CHECK_ASYNC_F( val == 123456, tres );
       }
       else {
-        EXAM_CHECK_ASYNC( val == -123456 );
+        EXAM_CHECK_ASYNC_F( val == -123456, tres );
       }
     }
   }
+
+  return tres;
 }
 
 
@@ -1426,10 +1430,11 @@ void locale_test::_money_put_get2( const locale& loc, const locale& streamLoc, c
 // of digits in fraction. I.e. '9' should be printed as '0.09',
 // if x.frac_digits() == 2.
 
-void locale_test::_money_put_X_bug( const locale& loc, const ref_monetary* prl )
+int locale_test::_money_put_X_bug( const locale& loc, const ref_monetary* prl )
 {
+  int tres = 0;
   const ref_monetary &rl = *prl;
-  EXAM_CHECK_ASYNC( has_facet<money_put<char> >(loc) );
+  EXAM_CHECK_ASYNC_F( has_facet<money_put<char> >(loc), tres );
   money_put<char> const& fmp = use_facet<money_put<char> >(loc);
 
   ostringstream ostr;
@@ -1439,60 +1444,60 @@ void locale_test::_money_put_X_bug( const locale& loc, const ref_monetary* prl )
   // ostr.str("");
   // Check value with one decimal digit:
   {
-    EXAM_CHECK_ASYNC( (has_facet<moneypunct<char, false> >(loc)) );
+    EXAM_CHECK_ASYNC_F( (has_facet<moneypunct<char, false> >(loc)), tres );
     moneypunct<char, false> const& dom_fmp = use_facet<moneypunct<char, false> >(loc);
     string str_res;
     // Check money_put
     {
       ostreambuf_iterator<char, char_traits<char> > res = fmp.put(ostr, false, ostr, ' ', 9);
 
-      EXAM_CHECK_ASYNC( !res.failed() );
+      EXAM_CHECK_ASYNC_F( !res.failed(), tres );
       str_res = ostr.str();
 
       size_t fieldIndex = 0;
       size_t index = 0;
 
       if (dom_fmp.pos_format().field[fieldIndex] == money_base::sign) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, dom_fmp.positive_sign().size()) == dom_fmp.positive_sign() );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, dom_fmp.positive_sign().size()) == dom_fmp.positive_sign(), tres );
         index += dom_fmp.positive_sign().size();
         ++fieldIndex;
       }
 
       string::size_type p = strlen( rl.money_prefix );
       if (p != 0) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, p) == rl.money_prefix );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, p) == rl.money_prefix, tres );
         index += p;
         ++fieldIndex;
       }
       if (dom_fmp.neg_format().field[fieldIndex] == money_base::space ||
           dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
       if (dom_fmp.frac_digits() != 0) {
-        EXAM_CHECK_ASYNC( str_res[index++] == '0' );
-        EXAM_CHECK_ASYNC( str_res[index++] == dom_fmp.decimal_point() );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == '0', tres );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == dom_fmp.decimal_point(), tres );
         for ( int fd = 1; fd < dom_fmp.frac_digits(); ++fd ) {
-          EXAM_CHECK_ASYNC( str_res[index++] == '0' );
+          EXAM_CHECK_ASYNC_F( str_res[index++] == '0', tres );
         }
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '9' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '9', tres );
       ++fieldIndex;
 
       //space cannot be last:
       if ((fieldIndex < 3) &&
           dom_fmp.neg_format().field[fieldIndex] == money_base::space) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
 
       if (fieldIndex == 3) {
         //If none is last we should not add anything to the resulting string:
         if (dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-          EXAM_CHECK_ASYNC( index == str_res.size() );
+          EXAM_CHECK_ASYNC_F( index == str_res.size(), tres );
         } else {
-          EXAM_CHECK_ASYNC( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol );
-          EXAM_CHECK_ASYNC( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix );
+          EXAM_CHECK_ASYNC_F( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol, tres );
+          EXAM_CHECK_ASYNC_F( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix, tres );
         }
       }
     }
@@ -1501,70 +1506,71 @@ void locale_test::_money_put_X_bug( const locale& loc, const ref_monetary* prl )
   ostr.str("");
   // Check value with two decimal digit:
   {
-    EXAM_CHECK_ASYNC( (has_facet<moneypunct<char, false> >(loc)) );
+    EXAM_CHECK_ASYNC_F( (has_facet<moneypunct<char, false> >(loc)), tres );
     moneypunct<char, false> const& dom_fmp = use_facet<moneypunct<char, false> >(loc);
     string str_res;
     // Check money_put
     {
       ostreambuf_iterator<char, char_traits<char> > res = fmp.put(ostr, false, ostr, ' ', 90);
 
-      EXAM_CHECK_ASYNC( !res.failed() );
+      EXAM_CHECK_ASYNC_F( !res.failed(), tres );
       str_res = ostr.str();
 
       size_t fieldIndex = 0;
       size_t index = 0;
 
       if (dom_fmp.pos_format().field[fieldIndex] == money_base::sign) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, dom_fmp.positive_sign().size()) == dom_fmp.positive_sign() );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, dom_fmp.positive_sign().size()) == dom_fmp.positive_sign(), tres );
         index += dom_fmp.positive_sign().size();
         ++fieldIndex;
       }
 
       string::size_type p = strlen( rl.money_prefix );
       if (p != 0) {
-        EXAM_CHECK_ASYNC( str_res.substr(index, p) == rl.money_prefix );
+        EXAM_CHECK_ASYNC_F( str_res.substr(index, p) == rl.money_prefix, tres );
         index += p;
         ++fieldIndex;
       }
       if (dom_fmp.neg_format().field[fieldIndex] == money_base::space ||
           dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
       if (dom_fmp.frac_digits() != 0) {
-        EXAM_CHECK_ASYNC( str_res[index++] == '0' );
-        EXAM_CHECK_ASYNC( str_res[index++] == dom_fmp.decimal_point() );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == '0', tres );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == dom_fmp.decimal_point(), tres );
         for ( int fd = 1; fd < dom_fmp.frac_digits() - 1; ++fd ) {
-          EXAM_CHECK_ASYNC( str_res[index++] == '0' );
+          EXAM_CHECK_ASYNC_F( str_res[index++] == '0', tres );
         }
       }
-      EXAM_CHECK_ASYNC( str_res[index++] == '9' );
+      EXAM_CHECK_ASYNC_F( str_res[index++] == '9', tres );
       if (dom_fmp.frac_digits() != 0) {
-        EXAM_CHECK_ASYNC( str_res[index++] == '0' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == '0', tres );
       }
       ++fieldIndex;
 
       //space cannot be last:
       if ((fieldIndex < 3) &&
           dom_fmp.neg_format().field[fieldIndex] == money_base::space) {
-        EXAM_CHECK_ASYNC( str_res[index++] == ' ' );
+        EXAM_CHECK_ASYNC_F( str_res[index++] == ' ', tres );
         ++fieldIndex;
       }
 
       if (fieldIndex == 3) {
         //If none is last we should not add anything to the resulting string:
         if (dom_fmp.neg_format().field[fieldIndex] == money_base::none) {
-          EXAM_CHECK_ASYNC( index == str_res.size() );
+          EXAM_CHECK_ASYNC_F( index == str_res.size(), tres );
         } else {
-          EXAM_CHECK_ASYNC( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol );
-          EXAM_CHECK_ASYNC( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix );
+          EXAM_CHECK_ASYNC_F( dom_fmp.neg_format().field[fieldIndex] == money_base::symbol, tres );
+          EXAM_CHECK_ASYNC_F( str_res.substr(index, strlen(rl.money_suffix)) == rl.money_suffix, tres );
         }
       }
     }
   }
+  return tres;
 }
 
-typedef void (locale_test::*_MTest) ( const locale&, const ref_monetary* );
+typedef int (locale_test::*_MTest) ( const locale&, const ref_monetary* );
 
 static void _monetary_test_supported_locale( locale_test& inst, _MTest __test)
 {

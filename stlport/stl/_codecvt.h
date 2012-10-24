@@ -370,12 +370,18 @@ private:
 _STLP_TEMPLATE_NULL
 class _STLP_CLASS_DECLSPEC codecvt_byname<char, char, mbstate_t>
   : public codecvt<char, char, mbstate_t> {
+  friend class _Locale_impl;
 public:
   explicit codecvt_byname(const char* __name, size_t __refs = 0);
   ~codecvt_byname();
 private:
+  codecvt_byname( _Locale_codecvt* __cvt ) :
+      _M_codecvt( __cvt )
+    { }
   codecvt_byname(const codecvt_byname<char, char, mbstate_t>&);
   codecvt_byname<char, char, mbstate_t>& operator =(const codecvt_byname<char, char, mbstate_t>&);
+
+  _Locale_codecvt* _M_codecvt;
 };
 
 # ifndef _STLP_NO_WCHAR_T

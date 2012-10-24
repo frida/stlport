@@ -277,9 +277,16 @@ codecvt_byname<char, char, mbstate_t>
     : codecvt<char, char, mbstate_t>(refs) {
   if (!name)
     locale::_M_throw_on_null_name();
+
+  int __err_code;
+  char buf[_Locale_MAX_SIMPLE_NAME];
+  _M_codecvt = _STLP_PRIV __acquire_codecvt(name, buf, 0, &__err_code);
+  if (!_M_codecvt)
+    locale::_M_throw_on_creation_failure(__err_code, name, "codecvt");
 }
 
-codecvt_byname<char, char, mbstate_t>::~codecvt_byname() {}
+codecvt_byname<char, char, mbstate_t>::~codecvt_byname()
+{ _STLP_PRIV __release_codecvt(_M_codecvt); }
 
 
 #if !defined (_STLP_NO_WCHAR_T)
@@ -295,7 +302,7 @@ codecvt_byname<wchar_t, char, mbstate_t>::codecvt_byname(const char* name, size_
   char buf[_Locale_MAX_SIMPLE_NAME];
   _M_codecvt = _STLP_PRIV __acquire_codecvt(name, buf, 0, &__err_code);
   if (!_M_codecvt)
-    locale::_M_throw_on_creation_failure(__err_code, name, "ctype");
+    locale::_M_throw_on_creation_failure(__err_code, name, "codecvt");
 }
 
 codecvt_byname<wchar_t, char, mbstate_t>::~codecvt_byname()

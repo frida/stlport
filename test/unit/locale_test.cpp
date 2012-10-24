@@ -384,7 +384,7 @@ int EXAM_IMPL(locale_test::collate_facet)
       EXAM_CHECK( has_facet<collate<char> >(loc) );
       collate<char> const& col = use_facet<collate<char> >(loc);
 
-      string strs[] = {"abdd", "ab\x0e7d", "abbd", "abcd"};
+      string strs[] = {"abdd", "ab\xe7\x64", "abbd", "abcd"};
 
       string transformed[4];
       for (size_t i = 0; i < 4; ++i) {
@@ -394,7 +394,7 @@ int EXAM_IMPL(locale_test::collate_facet)
       sort(strs, strs + 4, loc);
       EXAM_CHECK( strs[0] == "abbd" );
       EXAM_CHECK( strs[1] == "abcd" );
-      EXAM_CHECK( strs[2] == "ab\x0e7d" );
+      EXAM_CHECK( strs[2] == "ab\xe7\x64" );
       EXAM_CHECK( strs[3] == "abdd" );
 
       sort(transformed, transformed + 4);

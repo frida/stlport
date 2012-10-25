@@ -528,7 +528,11 @@ int EXAM_IMPL(fstream_test::seek_wide_stream)
   // Test with a wariable encoding:
   locale loc;
   try {
+#ifdef WIN32
     locale tmp(locale::classic(), new codecvt_byname<wchar_t, char, mbstate_t>(".UTF-8"));
+#else
+    locale tmp(locale::classic(), new codecvt_byname<wchar_t, char, mbstate_t>("en_US.UTF-8"));
+#endif
     loc = tmp;
   }
   catch ( const runtime_error& err ) {

@@ -626,7 +626,17 @@ struct _Lim<F,128>
 #  if defined (_STLP_BIG_ENDIAN)
     _access tmp = { _STLP_ADDITIONAL_OPEN_BRACKET 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 _STLP_ADDITIONAL_CLOSE_BRACKET };
 #  else /* _STLP_LITTLE_ENDIAN */
+#   if defined(__i386__) || defined(__ia64__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_IA64) || defined(_M_AMD64)
+    /* This is same format as 80-bits above, just take into account alignment (padded
+       by empty bytes).
+       For historical reasons, this format has no implicit/hidden bit: the explicit bit
+       was used in the Intel 8087 to suppress the normalization of subnormal numbers in
+       certain cases.
+     */
+    _access tmp = { _STLP_ADDITIONAL_OPEN_BRACKET 0, 0, 0, 0, 0, 0, 0, 0x80, 0xff, 0x7f, 0, 0, 0, 0, 0, 0 _STLP_ADDITIONAL_CLOSE_BRACKET };
+#   else
     _access tmp = { _STLP_ADDITIONAL_OPEN_BRACKET 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x7f, 0, 0, 0, 0, 0, 0 _STLP_ADDITIONAL_CLOSE_BRACKET };
+#   endif
 #  endif
     return tmp.f;
   }

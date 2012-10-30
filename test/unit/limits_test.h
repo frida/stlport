@@ -143,17 +143,18 @@ int EXAM_IMPL(limits_test::sNaN)
    * EXAM_CHECK_ASYNC(! (snan >= 42));
    */
 
+#if (defined (__amd64__) || defined (_M_AMD64) || defined (__x86_64__)) || \
+     !(defined (__i386) || defined (_M_IX86) || defined (_M_ARM))
+  // It's known, that for 32-bit mode of x86 return
+  // via FP register convert sNaN into qNaN, 
+  // so skip this checks.
+  // Another possible workaround: return const reference instead of value.
   if ( std::is_same<float,_Tp>::value ) {
     ieee754_float v;
     v.f = snan;
     EXAM_CHECK( v.ieee_nan.quiet_nan == 0 );
   }
 
-#if (defined (__amd64__) || defined (_M_AMD64) || defined (__x86_64__)) || \
-     !(defined (__i386) || defined (_M_IX86) || defined (_M_ARM))
-  // It's known, that for 32-bit mode of x86 return
-  // via FP register convert sNaN into qNaN,
-  // so skip this check.
   if ( std::is_same<double,_Tp>::value ) {
     ieee754_double v;
     v.d = snan;

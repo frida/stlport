@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-04-16 19:02:56 ptr>
+// -*- C++ -*- Time-stamp: <2012-10-30 10:39:22 ptr>
 
 /*
  * Copyright (c) 2004-2009
@@ -553,10 +553,10 @@ int EXAM_IMPL(locale_test::collate_by_name)
                     cfacet.compare(str1, str1 + size1, str2, str2 + size2) );
 
     //Smallest string should be before largest one:
-    EXAM_CHECK( cfacet_byname.compare(str1, str1 + size1 - 2, str2, str2 + size2 - 1) ==
-                    cfacet.compare(str1, str1 + size1 - 2, str2, str2 + size2 - 1) );
-    EXAM_CHECK( cfacet_byname.compare(str1, str1 + size1 - 1, str2, str2 + size2 - 2) ==
-                    cfacet.compare(str1, str1 + size1 - 1, str2, str2 + size2 - 2) );
+    EXAM_CHECK( (cfacet_byname.compare(str1, str1 + size1 - 2, str2, str2 + size2 - 1) < 0) &&
+                (cfacet.compare(str1, str1 + size1 - 2, str2, str2 + size2 - 1) < 0) );
+    EXAM_CHECK( (cfacet_byname.compare(str1, str1 + size1 - 1, str2, str2 + size2 - 2) > 0) &&
+                (cfacet.compare(str1, str1 + size1 - 1, str2, str2 + size2 - 2) > 0) );
 
     // We cannot play with 'ç' char here because doing so would make test result
     // dependant on char being consider as signed or not...

@@ -88,7 +88,7 @@ int __lexicographical_compare_3way(_InputIter1 __first1, _InputIter1 __last1,
     ++__first2;
   }
   if (__first2 == __last2) {
-    return !(__first1 == __last1);
+    return __first1 == __last1 ? 0 : 1;
   }
   else {
     return -1;

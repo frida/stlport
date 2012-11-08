@@ -18,11 +18,11 @@
  *
  */
 
-#include "map_test.h"
-
 //Has to be first for StackAllocator swap overload to be taken
 //into account (at least using GCC 4.0.1)
 #include "stack_allocator.h"
+
+#include "map_test.h"
 
 #include <map>
 #include <algorithm>

@@ -166,7 +166,7 @@ class _String_base
 # error "mot implemented"
 #else
         _STLP_STD::swap(_M_end_of_storage, x._M_end_of_storage);
-        _M_start_of_storage.swap(x._M_start_of_storage);
+        _STLP_STD::swap(_M_start_of_storage._M_data, x._M_start_of_storage._M_data);
         _STLP_STD::swap(_M_finish, x._M_finish);
 #endif
       }
@@ -187,6 +187,9 @@ class _String_base
 
     void _M_swap( _Self& __s )
       {
+        if ( static_cast<allocator_type&>(_M_start_of_storage) != static_cast<allocator_type&>(__s._M_start_of_storage) ) {
+          _STLP_STD::swap( static_cast<allocator_type&>(_M_start_of_storage), static_cast<allocator_type&>(__s._M_start_of_storage) );
+        }
 #if defined (_STLP_USE_SHORT_STRING_OPTIM)
         // _Tp tmp[_DEFAULT_SIZE];
         // copy( s._M_buffers._M_static_buf, s._M_buffers._M_static_buf + _DEFAULT_SIZE, tmp );
@@ -231,7 +234,7 @@ class _String_base
         }
 #else
         _STLP_STD::swap(_M_end_of_storage, __s._M_end_of_storage);
-        _M_start_of_storage.swap(__s._M_start_of_storage);
+        _STLP_STD::swap(_M_start_of_storage._M_data, __s._M_start_of_storage._M_data);
         _STLP_STD::swap(_M_finish, __s._M_finish);
 #endif
       }

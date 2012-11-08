@@ -300,6 +300,7 @@ class _Rb_tree_base
 
   private:
     typedef _Rb_tree_base<_Tp, _Alloc> _Self;
+  protected:
     typedef typename _Alloc::template rebind<_Node>::other _M_node_allocator_type;
     typedef _STLP_alloc_proxy<_Node_base, _M_node_allocator_type> _AllocProxy;
 
@@ -493,20 +494,22 @@ public:
 
   void swap(_Self& __t)
       {
+        if (this->get_allocator() != __t.get_allocator()) {
+          _STLP_STD::swap( static_cast<typename _Base::_M_node_allocator_type&>(this->_M_header), static_cast<typename _Base::_M_node_allocator_type&>(__t._M_header) );
+        }
         if (__t.empty()) {
           if (this->empty()) {
             return;
           }
-          // __t._M_header.swap(this->_M_header);
-          _STLP_STD::swap( this->_M_header, __t._M_header );
+          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
           __t._M_rebind(&this->_M_header._M_data);
           this->_M_empty_initialize();
         } else if (this->empty()) {
-          __t.swap(*this);
-          return;
+          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
+          this->_M_rebind(&__t._M_header._M_data);
+          __t._M_empty_initialize();
         } else {
-          // this->_M_header.swap(__t._M_header);
-          _STLP_STD::swap( this->_M_header, __t._M_header );
+          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
           this->_M_rebind(&__t._M_header._M_data);
           __t._M_rebind(&this->_M_header._M_data);
         }

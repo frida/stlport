@@ -313,10 +313,19 @@ int EXAM_IMPL(set_test::allocator_with_state)
       sint2.insert(i);
     SetInt sint2Cpy(sint2);
 
+    EXAM_CHECK( !sint1.get_allocator().swaped() );
+    EXAM_CHECK( !sint2.get_allocator().swaped() );
+    EXAM_CHECK( !sint1Cpy.get_allocator().swaped() );
+    EXAM_CHECK( !sint2Cpy.get_allocator().swaped() );
+    EXAM_CHECK( sint1.size() == 0 );
+    EXAM_CHECK( sint2Cpy.size() == 10 );
+
     sint1.swap(sint2);
 
     EXAM_CHECK( sint1.get_allocator().swaped() );
     EXAM_CHECK( sint2.get_allocator().swaped() );
+
+    EXAM_CHECK( sint1.size() == 10 );
 
     EXAM_CHECK( sint1 == sint2Cpy );
     EXAM_CHECK( sint2 == sint1Cpy );

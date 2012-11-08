@@ -603,10 +603,12 @@ class deque
       {
         _STLP_STD::swap(this->_M_start, __x._M_start);
         _STLP_STD::swap(this->_M_finish, __x._M_finish);
-        // this->_M_map.swap(__x._M_map);
-        _STLP_STD::swap( this->_M_map, __x._M_map );
-        // this->_M_map_size.swap(__x._M_map_size);
-        _STLP_STD::swap( this->_M_map_size, __x._M_map_size );
+        if (this->get_allocator() != __x.get_allocator()) {
+          _STLP_STD::swap(static_cast<allocator_type&>(this->_M_map_size), static_cast<allocator_type&>(__x._M_map_size));
+          _STLP_STD::swap(static_cast<_Map_alloc_type&>(this->_M_map), static_cast<_Map_alloc_type&>(__x._M_map));
+        }
+        _STLP_STD::swap( this->_M_map._M_data, __x._M_map._M_data );
+        _STLP_STD::swap( this->_M_map_size._M_data, __x._M_map_size._M_data );
       }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
     void _M_swap_workaround(_Self& __x)

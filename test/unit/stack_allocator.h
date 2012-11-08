@@ -1,7 +1,10 @@
 #ifndef STLPORT_UNIT_TEST_STACK_ALLOCATOR_H
 #define STLPORT_UNIT_TEST_STACK_ALLOCATOR_H
 
-#include <type_traits>
+#include <memory>
+#include <algorithm>
+#include <stdio.h>
+//#include <type_traits>
 
 template <class _Tp>
 struct StackAllocator;
@@ -9,15 +12,15 @@ struct StackAllocator;
 _STLP_BEGIN_NAMESPACE
 
 // namespace stlp_std {
-template <class _Tp>
-void swap(_Tp& __a, _Tp& __b);
+// template <class _Tp>
+// void swap(_Tp& __a, _Tp& __b);
 
 template <class _Tp>
 void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b );
 // }
 _STLP_END_NAMESPACE
 
-#include <algorithm>
+//#include <algorithm>
 
 #if !defined (STLPORT) || defined (_STLP_USE_EXCEPTIONS)
 //For bad_alloc:
@@ -33,7 +36,7 @@ _STLP_END_NAMESPACE
 
 struct State {
   char *m_beg, *m_end, *m_cur;
-  bool m_isOk, m_swaped;
+  mutable bool m_isOk, m_swaped;
   int m_nbAlloc;
 
   //The following members are shared among all StackAllocator instance created from
@@ -55,6 +58,21 @@ struct State {
     m_isOk(true), m_swaped(other.m_swaped), m_nbAlloc(0),
     m_sharedCur(other.m_sharedCur), m_sharedOk(other.m_sharedOk),
     m_sharedNbAlloc(other.m_sharedNbAlloc) {}
+#if 0
+  State& operator =(const State& other)
+  {
+    m_beg = other.m_beg;
+    m_end = other.m_end;
+    m_cur = other.m_cur;
+    m_isOk = other.m_isOk;
+    m_swaped = other.m_swaped = true;
+    m_nbAlloc = other.m_nbAlloc;
+    m_sharedCur = other.m_sharedCur;
+    m_sharedOk = other.m_sharedOk;
+    m_sharedNbAlloc = other.m_sharedNbAlloc;
+    return *this;
+  }
+#endif
 };
 
 /* This allocator is not thread safe:
@@ -174,8 +192,8 @@ namespace std {
 // #endif
 
   template <class _Tp>
-  inline void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b)
-  {  __a.swap(__b); }
+  void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b)
+  { __a.swap(__b); }
 
 // #if !defined (STLPORT) || defined (_STLP_USE_NAMESPACES)
 }

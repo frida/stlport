@@ -185,6 +185,7 @@ int EXAM_IMPL(uninitialized_test::copy_test)
   EXAM_CHECK( std::is_trivially_copyable<TrivialInitStruct>::value == true );
 
   {
+    TrivialInitStruct::nbConstructorCalls = 0;
     //Vector initialization:
     vector<TrivialInitStruct> vect(10);
     //Just 1 constructor call for the default value:
@@ -196,12 +197,82 @@ int EXAM_IMPL(uninitialized_test::copy_test)
 
 int EXAM_IMPL(uninitialized_test::fill_test)
 {
-  throw exam::skip_exception();
+  {
+    char array[sizeof(TrivialCopyStruct)*5];
+    TrivialCopyStruct* a = reinterpret_cast<TrivialCopyStruct*>(array);
+    TrivialCopyStruct b;
+
+    b.member = 2;
+
+    uninitialized_fill( a, a + 5, b );
+
+    EXAM_CHECK( a[0].member == 2 );
+    EXAM_CHECK( a[4].member == 2 );
+  }
+  {
+    char array[sizeof(NotTrivialCopyStruct)*5];
+    NotTrivialCopyStruct* a = reinterpret_cast<NotTrivialCopyStruct*>(array);
+    NotTrivialCopyStruct b;
+
+    b.member = 2;
+
+    uninitialized_fill( a, a + 5, b );
+
+    EXAM_CHECK( a[0].member == 1 );
+    EXAM_CHECK( a[4].member == 1 );
+  }
+  {
+    TrivialInitStruct::nbConstructorCalls = 0;
+    char array[sizeof(TrivialInitStruct)*5];
+
+    TrivialInitStruct* a = reinterpret_cast<TrivialInitStruct*>(array);
+    TrivialInitStruct b;
+
+    uninitialized_fill( a, a + 5, b );
+
+    EXAM_CHECK( TrivialInitStruct::nbConstructorCalls == 1 );
+  }
+
   return EXAM_RESULT;
 }
 
 int EXAM_IMPL(uninitialized_test::fill_n_test)
 {
-  throw exam::skip_exception();
+  {
+    char array[sizeof(TrivialCopyStruct)*5];
+    TrivialCopyStruct* a = reinterpret_cast<TrivialCopyStruct*>(array);
+    TrivialCopyStruct b;
+
+    b.member = 2;
+
+    uninitialized_fill_n( a, 5, b );
+
+    EXAM_CHECK( a[0].member == 2 );
+    EXAM_CHECK( a[4].member == 2 );
+  }
+  {
+    char array[sizeof(NotTrivialCopyStruct)*5];
+    NotTrivialCopyStruct* a = reinterpret_cast<NotTrivialCopyStruct*>(array);
+    NotTrivialCopyStruct b;
+
+    b.member = 2;
+
+    uninitialized_fill_n( a, 5, b );
+
+    EXAM_CHECK( a[0].member == 1 );
+    EXAM_CHECK( a[4].member == 1 );
+  }
+  {
+    TrivialInitStruct::nbConstructorCalls = 0;
+    char array[sizeof(TrivialInitStruct)*5];
+
+    TrivialInitStruct* a = reinterpret_cast<TrivialInitStruct*>(array);
+    TrivialInitStruct b;
+
+    uninitialized_fill_n( a, 5, b );
+
+    EXAM_CHECK( TrivialInitStruct::nbConstructorCalls == 1 );
+  }
+
   return EXAM_RESULT;
 }

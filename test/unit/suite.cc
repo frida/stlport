@@ -838,8 +838,8 @@ int main( int argc, const char** argv )
   uninitialized_test unin_test;
 
   t.add( &uninitialized_test::copy_test, unin_test, "copy_test" );
-  t.add( &uninitialized_test::fill_test, unin_test, "fill_test" );
-  t.add( &uninitialized_test::fill_n_test, unin_test, "fill_n_test" );
+  t.add( &uninitialized_test::fill_test, unin_test, "uninitialized_fill" );
+  t.add( &uninitialized_test::fill_n_test, unin_test, "uninitialized_fill_n" );
 
   bitset_test bts_test;
 

@@ -73,7 +73,7 @@ int EXAM_IMPL(unique_test::uniqcpy2)
   const size_t count = sizeof(labels) / sizeof(labels[0]);
   const char* uCopy[count];
   const char **puCopy = &uCopy[0];
-  fill(puCopy, puCopy + count, "");
+  uninitialized_fill(puCopy, puCopy + count, (const char*)(0));
 
   unique_copy(plabels, plabels + count, puCopy, str_equal);
 

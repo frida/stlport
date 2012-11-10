@@ -462,13 +462,36 @@ int EXAM_IMPL(vector_test::optimizations_check)
 
 int EXAM_IMPL(vector_test::assign_check)
 {
-  vector<int> v(3,1);
   int array[] = { 1, 2, 3, 4, 5 };
+  {
+    vector<int> v(3,1);
   
-  v.assign( array, array + 5 );
-  EXAM_CHECK( v[4] == 5 );
-  EXAM_CHECK( v[0] == 1 );
-  EXAM_CHECK( v[1] == 2 );
+    v.assign( array, array + 5 );
+    EXAM_CHECK( v[4] == 5 );
+    EXAM_CHECK( v[0] == 1 );
+    EXAM_CHECK( v[1] == 2 );
+    EXAM_CHECK( v.size() == 5 );
+  }
+  {
+    vector<int> v(7,1);
+    int array[] = { 1, 2, 3, 4, 5 };
+
+    v.assign( array, array + 5 );
+    EXAM_CHECK( v[4] == 5 );
+    EXAM_CHECK( v[0] == 1 );
+    EXAM_CHECK( v[1] == 2 );
+    EXAM_CHECK( v.size() == 5 );
+  }
+  {
+    vector<int> v(3,1);
+    v.reserve(7);
+
+    v.assign( array, array + 5 );
+    EXAM_CHECK( v[4] == 5 );
+    EXAM_CHECK( v[0] == 1 );
+    EXAM_CHECK( v[1] == 2 );
+    EXAM_CHECK( v.size() == 5 );
+  }
 
   return EXAM_RESULT;
 }

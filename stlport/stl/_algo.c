@@ -349,7 +349,7 @@ _ForwardIter __rotate_aux(_ForwardIter __first,
 
   _ForwardIter __first2 = __middle;
   do {
-    _STLP_STD::swap(*__first++, *__first2++);
+    _STLP_PRIV __swap(*__first++, *__first2++);
     if (__first == __middle)
       __middle = __first2;
   } while (__first2 != __last);
@@ -359,7 +359,7 @@ _ForwardIter __rotate_aux(_ForwardIter __first,
   __first2 = __middle;
 
   while (__first2 != __last) {
-    _STLP_STD::swap (*__first++, *__first2++);
+    _STLP_PRIV __swap (*__first++, *__first2++);
     if (__first == __middle)
       __middle = __first2;
     else if (__first2 == __last)
@@ -384,7 +384,7 @@ _BidirectionalIter __rotate_aux(_BidirectionalIter __first,
   _STLP_PRIV __reverse(__middle, __last,   bidirectional_iterator_tag());
 
   while (__first != __middle && __middle != __last)
-    _STLP_STD::swap(*__first++, *--__last);
+    _STLP_PRIV __swap(*__first++, *--__last);
 
   if (__first == __middle) {
     _STLP_PRIV __reverse(__middle, __last,   bidirectional_iterator_tag());
@@ -654,7 +654,7 @@ inline _ForwardIter __partition(_ForwardIter __first,
 
   while (++__next != __last) {
     if (__pred(*__next)) {
-      _STLP_STD::swap(*__first, *__next);
+      _STLP_PRIV __swap(*__first, *__next);
       ++__first;
     }
   }

@@ -4,35 +4,17 @@
 #include <memory>
 #include <algorithm>
 #include <stdio.h>
-//#include <type_traits>
 
 template <class _Tp>
 struct StackAllocator;
 
-_STLP_BEGIN_NAMESPACE
-
-// namespace stlp_std {
-// template <class _Tp>
-// void swap(_Tp& __a, _Tp& __b);
-
 template <class _Tp>
 void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b );
-// }
-_STLP_END_NAMESPACE
-
-//#include <algorithm>
 
 #if !defined (STLPORT) || defined (_STLP_USE_EXCEPTIONS)
 //For bad_alloc:
 #  include <new>
 #endif
-
-// #undef __STD
-// #if !defined (STLPORT) || defined (_STLP_USE_NAMESPACES)
-// #  define __STD std::
-// #else
-// #  define __STD
-// #endif
 
 struct State {
   char *m_beg, *m_end, *m_cur;
@@ -44,10 +26,6 @@ struct State {
   char **m_sharedCur;
   bool *m_sharedOk;
   int *m_sharedNbAlloc;
-
-#if defined (__DMC__)
-  State(){}
-#endif
 
   State(char *beg, char *end)
     : m_beg(beg), m_end(end), m_cur(m_beg), m_isOk(true), m_swaped(false), m_nbAlloc(0),
@@ -88,10 +66,6 @@ struct StackAllocator
   typedef size_t     size_type;
   typedef ptrdiff_t  difference_type;
 
-#if defined (__DMC__)
-  StackAllocator(){}
-#endif
-
   StackAllocator(char *beg, char *end)
     : m_state(beg, end) {}
 
@@ -118,12 +92,8 @@ struct StackAllocator
     }
 #if !defined (STLPORT) || defined (_STLP_USE_EXCEPTIONS)
     throw std::bad_alloc();
-#  if defined (__DMC__)
-    return 0;
-#  endif
-#else
-    return 0;
 #endif
+    return 0;
   }
 
 #if defined (STLPORT) && \
@@ -187,18 +157,8 @@ private:
   State m_state;
 };
 
-// #if !defined (STLPORT) || defined (_STLP_USE_NAMESPACES)
-namespace std {
-// #endif
-
-  template <class _Tp>
-  void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b)
-  { __a.swap(__b); }
-
-// #if !defined (STLPORT) || defined (_STLP_USE_NAMESPACES)
-}
-// #endif
-
-// #undef __STD
+template <class _Tp>
+void swap( ::StackAllocator<_Tp>& __a, ::StackAllocator<_Tp>& __b)
+{ __a.swap(__b); }
 
 #endif //STLPORT_UNIT_TEST_STACK_ALLOCATOR_H

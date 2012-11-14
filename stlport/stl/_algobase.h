@@ -89,6 +89,10 @@ inline void swap(_Tp& __a, _Tp& __b)
 
 _STLP_MOVE_TO_PRIV_NAMESPACE
 
+template <class _Tp>
+inline void __swap(_Tp& __a, _Tp& __b)
+{ /* using namespace _STLP_STD; */ swap(__a, __b); }
+
 template <class _ForwardIter1, class _ForwardIter2>
 inline void __iter_swap_aux(_ForwardIter1& __i1, _ForwardIter2& __i2, const true_type& /*OKToSwap*/)
 {

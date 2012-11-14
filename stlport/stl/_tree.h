@@ -495,26 +495,26 @@ public:
   void swap(_Self& __t)
       {
         if (this->get_allocator() != __t.get_allocator()) {
-          _STLP_STD::swap( static_cast<typename _Base::_M_node_allocator_type&>(this->_M_header), static_cast<typename _Base::_M_node_allocator_type&>(__t._M_header) );
+          _STLP_PRIV __swap( static_cast<typename _Base::_M_node_allocator_type&>(this->_M_header), static_cast<typename _Base::_M_node_allocator_type&>(__t._M_header) );
         }
         if (__t.empty()) {
           if (this->empty()) {
             return;
           }
-          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
+          _STLP_PRIV __swap( this->_M_header._M_data, __t._M_header._M_data );
           __t._M_rebind(&this->_M_header._M_data);
           this->_M_empty_initialize();
         } else if (this->empty()) {
-          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
+          _STLP_PRIV __swap( this->_M_header._M_data, __t._M_header._M_data );
           this->_M_rebind(&__t._M_header._M_data);
           __t._M_empty_initialize();
         } else {
-          _STLP_STD::swap( this->_M_header._M_data, __t._M_header._M_data );
+          _STLP_PRIV __swap( this->_M_header._M_data, __t._M_header._M_data );
           this->_M_rebind(&__t._M_header._M_data);
           __t._M_rebind(&this->_M_header._M_data);
         }
-        _STLP_STD::swap(_M_node_count, __t._M_node_count);
-        _STLP_STD::swap(_M_key_compare, __t._M_key_compare);
+        _STLP_PRIV __swap(_M_node_count, __t._M_node_count);
+        _STLP_PRIV __swap(_M_key_compare, __t._M_key_compare);
       }
 
 public:

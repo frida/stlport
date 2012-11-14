@@ -166,7 +166,7 @@ _Rb_global<_Dummy>::_Rebalance_for_erase(_Rb_tree_node_base* __z,
     else
       __z->_M_parent->_M_right = __y;
     __y->_M_parent = __z->_M_parent;
-    _STLP_STD::swap(__y->_M_color, __z->_M_color);
+    _STLP_PRIV __swap(__y->_M_color, __z->_M_color);
     __y = __z;
     // __y now points to node to be actually deleted
   }

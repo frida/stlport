@@ -1659,7 +1659,7 @@ public:
   }
 
   void swap(_Self& __b) {
-    _M_tree_ptr.swap(__b._M_tree_ptr);
+    _M_tree_ptr._swap(__b._M_tree_ptr);
   }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
   void _M_swap_workaround(_Self& __x) { swap(__x); }

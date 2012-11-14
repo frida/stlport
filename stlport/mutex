@@ -1012,8 +1012,8 @@ class unique_lock
 
     void swap( unique_lock& x ) /* noexcept */
       {
-        _STLP_STD::swap( const_cast<M*>(m), const_cast<M*>(x.m) );
-        _STLP_STD::swap( lk, x.lk );
+        _STLP_PRIV __swap( const_cast<M*>(m), const_cast<M*>(x.m) );
+        _STLP_PRIV __swap( lk, x.lk );
       }
 
     bool owns_lock() const

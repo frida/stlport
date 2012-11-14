@@ -1055,15 +1055,14 @@ class _STLP_alloc_proxy :
         _M_data(_STLP_STD::forward<Args>(__p)...)
       { }
 
-#if 0
-    void swap( _Self& r )
+    void _swap( _Self& r )
       {
-        // if ( static_cast<_MaybeReboundAlloc&>(*this) != static_cast<_MaybeReboundAlloc&>(r) ) {
-        //   _STLP_STD::swap( static_cast<_MaybeReboundAlloc&>(*this), static_cast<_MaybeReboundAlloc&>(r) );
-        // }
-        _STLP_STD::swap( _M_data, r._M_data );
+        using namespace _STLP_STD;
+        if ( static_cast<_MaybeReboundAlloc&>(*this) != static_cast<_MaybeReboundAlloc&>(r) ) {
+          swap( static_cast<_MaybeReboundAlloc&>(*this), static_cast<_MaybeReboundAlloc&>(r) );
+        }
+        swap( _M_data, r._M_data );
       }
-#endif
 };
 
 #if defined (_STLP_USE_TEMPLATE_EXPORT)
@@ -1078,11 +1077,9 @@ _STLP_EXPORT_TEMPLATE_CLASS _STLP_alloc_proxy<void**, allocator<void*> >;
 
 _STLP_MOVE_TO_STD_NAMESPACE
 
-#if 0
 template <class _Value, class _MaybeReboundAlloc>
 inline void swap( _STLP_PRIV _STLP_alloc_proxy<_Value,_MaybeReboundAlloc>& __a, _STLP_PRIV _STLP_alloc_proxy<_Value,_MaybeReboundAlloc>& __b)
-{ __a.swap( __b ); }
-#endif
+{ __a._swap( __b ); }
 
 _STLP_END_NAMESPACE
 

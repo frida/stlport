@@ -433,14 +433,7 @@ class forward_list
     bool empty() const { return this->_M_head._M_data._M_next == 0; }
 
     void swap(_Self& __x)
-      {
-        if ( get_allocator() != __x.get_allocator() ) {
-          _STLP_STD::swap( static_cast<_M_node_allocator_type&>(_M_head), static_cast<_M_node_allocator_type&>(__x._M_head) );
-        }
-        /* this->_M_head.swap(__x._M_head); */
-        // _STLP_STD::swap(this->_M_head, __x._M_head);
-        _STLP_STD::swap(this->_M_head._M_data._M_next, __x._M_head._M_data._M_next);
-      }
+      { this->_M_head._swap(__x._M_head); }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
     void _M_swap_workaround(_Self& __x) { swap(__x); }
 #endif

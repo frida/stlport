@@ -557,8 +557,8 @@ class deque
         _M_map(__x.get_allocator(), (value_type**)(0)),
         _M_map_size(__x.get_allocator(), (size_t)0)
       {
-        _STLP_STD::swap( _M_map._M_data, __x._M_map._M_data);
-        _STLP_STD::swap( _M_map_size._M_data, __x._M_map_size._M_data);
+        _STLP_PRIV __swap( _M_map._M_data, __x._M_map._M_data);
+        _STLP_PRIV __swap( _M_map_size._M_data, __x._M_map_size._M_data);
         __x._M_finish = __x._M_start;
       }
 
@@ -571,8 +571,8 @@ class deque
         if ( __x.get_allocator() == __a ) {
           _M_start = __x._M_start;
           _M_finish = __x._M_finish;
-          _STLP_STD::swap( _M_map._M_data, __x._M_map._M_data);
-          _STLP_STD::swap( _M_map_size._M_data, __x._M_map_size._M_data);
+          _STLP_PRIV __swap( _M_map._M_data, __x._M_map._M_data);
+          _STLP_PRIV __swap( _M_map_size._M_data, __x._M_map_size._M_data);
           __x._M_finish = __x._M_start;          
         } else {
           _M_initialize_map(__x._M_finish - __x._M_start);
@@ -601,14 +601,14 @@ class deque
 
     void swap(_Self& __x)
       {
-        _STLP_STD::swap(this->_M_start, __x._M_start);
-        _STLP_STD::swap(this->_M_finish, __x._M_finish);
+        _STLP_PRIV __swap(this->_M_start, __x._M_start);
+        _STLP_PRIV __swap(this->_M_finish, __x._M_finish);
         if (this->get_allocator() != __x.get_allocator()) {
-          _STLP_STD::swap(static_cast<allocator_type&>(this->_M_map_size), static_cast<allocator_type&>(__x._M_map_size));
-          _STLP_STD::swap(static_cast<_Map_alloc_type&>(this->_M_map), static_cast<_Map_alloc_type&>(__x._M_map));
+          _STLP_PRIV __swap(static_cast<allocator_type&>(this->_M_map_size), static_cast<allocator_type&>(__x._M_map_size));
+          _STLP_PRIV __swap(static_cast<_Map_alloc_type&>(this->_M_map), static_cast<_Map_alloc_type&>(__x._M_map));
         }
-        _STLP_STD::swap( this->_M_map._M_data, __x._M_map._M_data );
-        _STLP_STD::swap( this->_M_map_size._M_data, __x._M_map_size._M_data );
+        _STLP_PRIV __swap( this->_M_map._M_data, __x._M_map._M_data );
+        _STLP_PRIV __swap( this->_M_map_size._M_data, __x._M_map_size._M_data );
       }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
     void _M_swap_workaround(_Self& __x)

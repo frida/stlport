@@ -251,12 +251,12 @@ class hashtable
 
     void swap(_Self& __ht)
       {
-        _STLP_STD::swap(_M_hash, __ht._M_hash);
-        _STLP_STD::swap(_M_equals, __ht._M_equals);
+        _STLP_PRIV __swap(_M_hash, __ht._M_hash);
+        _STLP_PRIV __swap(_M_equals, __ht._M_equals);
         _M_elems.swap(__ht._M_elems);
         _M_buckets.swap(__ht._M_buckets);
-        _STLP_STD::swap(_M_num_elements, __ht._M_num_elements);
-        _STLP_STD::swap(_M_max_load_factor, __ht._M_max_load_factor);
+        _STLP_PRIV __swap(_M_num_elements, __ht._M_num_elements);
+        _STLP_PRIV __swap(_M_max_load_factor, __ht._M_max_load_factor);
       }
 
     iterator begin()
@@ -298,7 +298,7 @@ class hashtable
       { return _M_max_load_factor; }
     void max_load_factor(float __z)
       {
-        _STLP_STD::swap( _M_max_load_factor, __z );
+        _STLP_PRIV __swap( _M_max_load_factor, __z );
         if ( __z > _M_max_load_factor ) { // max load was decreased
           _M_enlarge(size()); // ... have to enlarge
         } else { // We can try to reduce size

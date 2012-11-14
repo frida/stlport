@@ -601,9 +601,9 @@ public:
       _M_insert_aux(end(), __x);
   }
   void swap(__BVECTOR_QUALIFIED& __x) {
-    _STLP_STD::swap(this->_M_start, __x._M_start);
-    _STLP_STD::swap(this->_M_finish, __x._M_finish);
-    this->_M_end_of_storage.swap(__x._M_end_of_storage);
+    _STLP_PRIV __swap(this->_M_start, __x._M_start);
+    _STLP_PRIV __swap(this->_M_finish, __x._M_finish);
+    this->_M_end_of_storage._swap(__x._M_end_of_storage);
   }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
   void _M_swap_workaround(__BVECTOR_QUALIFIED& __x) { swap(__x); }

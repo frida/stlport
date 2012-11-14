@@ -34,7 +34,13 @@
 
 _STLP_BEGIN_NAMESPACE
 
-template <class _Tp> void swap( _Tp&, _Tp& );
+// template <class _Tp> void swap( _Tp&, _Tp& );
+
+_STLP_MOVE_TO_PRIV_NAMESPACE
+
+template <class _Tp> void __swap( _Tp&, _Tp& );
+
+_STLP_MOVE_TO_STD_NAMESPACE
 
 template <class _Tp>
 class __move_source
@@ -207,7 +213,7 @@ struct pair {
     }
 
   void swap(pair& p) noexcept
-    { _STLP_STD::swap(first, p.first); _STLP_STD::swap(second, p.second); }
+    { _STLP_PRIV __swap(first, p.first); _STLP_PRIV __swap(second, p.second); }
 #endif // _STLP_CPP_0X
 };
 

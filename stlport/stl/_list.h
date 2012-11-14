@@ -466,8 +466,8 @@ class list
     void swap(_Self& __x)
       {
         if ( get_allocator() != __x.get_allocator() ) {
-          _STLP_STD::swap(static_cast<_M_node_allocator_type&>(_M_head),
-                          static_cast<_M_node_allocator_type&>(__x._M_head));
+          _STLP_PRIV __swap(static_cast<_M_node_allocator_type&>(_M_head),
+                            static_cast<_M_node_allocator_type&>(__x._M_head));
         }
         _Node_base& xnode = __x._M_head._M_data;
         _Node_base& node = _M_head._M_data;
@@ -488,8 +488,8 @@ class list
           node._M_next->_M_prev = node._M_prev->_M_next = &node;
           xnode._M_next = xnode._M_prev = &xnode; // __x._M_empty_initialize();
         } else {
-          _STLP_STD::swap(node._M_next, xnode._M_next);
-          _STLP_STD::swap(node._M_prev, xnode._M_prev);
+          _STLP_PRIV __swap(node._M_next, xnode._M_next);
+          _STLP_PRIV __swap(node._M_prev, xnode._M_prev);
           node._M_prev->_M_next = node._M_next->_M_prev = &node;
           xnode._M_prev->_M_next = xnode._M_next->_M_prev = &xnode;
         }

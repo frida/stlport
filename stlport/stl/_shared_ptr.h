@@ -466,7 +466,7 @@ class unique_ptr
       }
 
     void swap( unique_ptr& u ) _STLP_NOEXCEPT
-      { swap( _p, u._p ); swap( _d, u._d ); }
+      { _STLP_PRIV __swap( _p, u._p ); _STLP_PRIV __swap( _d, u._d ); }
 
     // disable copy from lvalue
     unique_ptr(const unique_ptr&) = delete;
@@ -597,7 +597,7 @@ class unique_ptr<T[], D>
     void reset(U) = delete;
 
     void swap( unique_ptr& u ) _STLP_NOEXCEPT
-      { swap( _p, u._p ); swap( _d, u._d ); }
+      { _STLP_PRIV __swap( _p, u._p ); _STLP_PRIV __swap( _d, u._d ); }
 
     // disable copy from lvalue
     unique_ptr( const unique_ptr& ) = delete;
@@ -1032,8 +1032,8 @@ class shared_ptr
     void swap( shared_ptr& r ) _STLP_NOEXCEPT
       {
         if ( _ref != r._ref ) {
-          _STLP_STD::swap( _p, r._p );
-          _STLP_STD::swap( _ref, r._ref );
+          _STLP_PRIV __swap( _p, r._p );
+          _STLP_PRIV __swap( _ref, r._ref );
         }
       }
 
@@ -1409,8 +1409,8 @@ class shared_ptr<void>
     void swap( shared_ptr& r ) _STLP_NOEXCEPT
       {
         if ( _ref != r._ref ) {
-          _STLP_STD::swap( _p, r._p );
-          _STLP_STD::swap( _ref, r._ref );
+          _STLP_PRIV __swap( _p, r._p );
+          _STLP_PRIV __swap( _ref, r._ref );
         }
       }
 
@@ -1783,8 +1783,8 @@ class weak_ptr
     void swap( weak_ptr& r ) _STLP_NOEXCEPT
       {
         if ( _ref != r._ref ) {
-          _STLP_STD::swap( _p, r._p );
-          _STLP_STD::swap( _ref, r._ref );
+          _STLP_PRIV __swap( _p, r._p );
+          _STLP_PRIV __swap( _ref, r._ref );
         }
       }
 

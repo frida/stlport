@@ -365,13 +365,9 @@ class vector :
 
     void swap(_Self& __x)
       {
-        _STLP_STD::swap(this->_M_start, __x._M_start);
-        _STLP_STD::swap(this->_M_finish, __x._M_finish);
-        // this->_M_end_of_storage.swap(__x._M_end_of_storage);
-        if ( get_allocator() != __x.get_allocator() ) {
-          _STLP_STD::swap( static_cast<allocator_type&>(this->_M_end_of_storage), static_cast<allocator_type&>(__x._M_end_of_storage) );
-        }
-        _STLP_STD::swap(this->_M_end_of_storage._M_data, __x._M_end_of_storage._M_data);
+        _STLP_PRIV __swap(this->_M_start, __x._M_start);
+        _STLP_PRIV __swap(this->_M_finish, __x._M_finish);
+        this->_M_end_of_storage._swap(__x._M_end_of_storage);
       }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
     void _M_swap_workaround(_Self& __x)

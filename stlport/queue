@@ -203,8 +203,8 @@ public:
   // To do: _Sequence must be swappable
   void swap( priority_queue& r )
     {
-      _STLP_STD::swap( comp, r.comp );
-      _STLP_STD::swap( c, r.c );
+      _STLP_PRIV __swap( comp, r.comp );
+      _STLP_PRIV __swap( c, r.c );
     }
 #if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
   void _M_swap_workaround(_Self& __x) {

@@ -443,6 +443,14 @@ int EXAM_IMPL(type_traits_test::type_traits_is_member_pointer)
 
 int EXAM_IMPL(type_traits_test::type_traits_is_const)
 {
+  struct S {
+    void f() const;
+    void g();
+  };
+ 
+  typedef void (S::*const PMFc)();
+  typedef void (S::*PMF)();
+ 
   EXAM_CHECK( std::is_const<const int>::value == true );
   EXAM_CHECK( std::is_const<const volatile int>::value == true );
   EXAM_CHECK( std::is_const<int* const>::value == true );
@@ -455,12 +463,22 @@ int EXAM_IMPL(type_traits_test::type_traits_is_const)
 #ifdef _STLP_CPP_0X
   EXAM_CHECK( std::is_const<const int&&>::value == false );
 #endif
+  EXAM_CHECK( (std::is_const<PMFc>::value) );
+  EXAM_CHECK( (!std::is_const<PMF>::value) );
 
   return EXAM_RESULT;
 }
 
 int EXAM_IMPL(type_traits_test::type_traits_is_volatile)
 {
+  struct S {
+    void f() volatile;
+    void g();
+  };
+
+  typedef void (S::*volatile PMFc)();
+  typedef void (S::*PMF)();
+
   EXAM_CHECK( std::is_volatile<volatile int>::value == true );
   EXAM_CHECK( std::is_volatile<const volatile int>::value == true );
   EXAM_CHECK( std::is_volatile<int* volatile>::value == true );
@@ -474,6 +492,8 @@ int EXAM_IMPL(type_traits_test::type_traits_is_volatile)
 #ifdef _STLP_CPP_0X
   EXAM_CHECK( std::is_volatile<volatile int&&>::value == false );
 #endif
+  EXAM_CHECK( (std::is_volatile<PMFc>::value) );
+  EXAM_CHECK( (!std::is_volatile<PMF>::value) );
 
   return EXAM_RESULT;
 }

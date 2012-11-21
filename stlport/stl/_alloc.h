@@ -63,10 +63,6 @@
 
 _STLP_BEGIN_NAMESPACE
 
-template <class T>
-inline T* addressof(T& r) noexcept
-{ return reinterpret_cast<T*>( &const_cast<char&>( reinterpret_cast<const volatile char&>(r) ) ); }
-
 // 20.6.3, pointer traits
 template <class Ptr> struct pointer_traits;
 // template <class T> struct pointer_traits<T*>;

@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-05-28 15:27:37 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-21 18:49:41 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -104,7 +104,7 @@ int main( int argc, const char** argv )
   exam::test_suite t( "STLport test" );
 
   type_traits_test ttt;
-  exam::test_suite::test_case_type tt_tc[10];
+  exam::test_suite::test_case_type tt_tc[12];
 
   tt_tc[0] = t.add( &type_traits_test::type_traits_internals, ttt, "traits_internals" );
 
@@ -144,7 +144,7 @@ int main( int argc, const char** argv )
   t.add( &type_traits_test::type_traits_is_union, ttt, "is_union", tt_tc[0] );
   t.add( &type_traits_test::type_traits_is_union, ttt, "is_class", tt_tc[0] );
 
-  t.add( &type_traits_test::is_constructible, ttt, "is_constructible", tt_tc[0] );
+  tt_tc[9] = t.add( &type_traits_test::is_constructible, ttt, "is_constructible", tt_tc[0] );
 
   t.add( &type_traits_test::is_assignable, ttt, "is_assignable", tt_tc[0] );
 
@@ -152,10 +152,10 @@ int main( int argc, const char** argv )
 
   t.add( &type_traits_test::is_trivially_copyable, ttt, "is_trivially_copyable", tt_tc[0] );
 
-  t.add( &type_traits_test::add_reference, ttt, "add reference",
+  tt_tc[10] = t.add( &type_traits_test::add_reference, ttt, "add reference",
     t.add( &type_traits_test::remove_reference, ttt, "remove_reference", tt_tc[0] ) );
 
-  t.add( &type_traits_test::result_of, ttt, "result_of", tt_tc + 5, tt_tc + 9 );
+  tt_tc[11] = t.add( &type_traits_test::result_of, ttt, "result_of", tt_tc + 5, tt_tc + 9 );
 
   null_ptr_test np_tst;
 
@@ -535,7 +535,7 @@ int main( int argc, const char** argv )
   t.add( &sort_test::sort4, srt_test, "sort4" );
   t.add( &sort_test::stblsrt1, srt_test, "stblsrt1" );
   t.add( &sort_test::stblsrt2, srt_test, "stblsrt2" );
-  t.add( &sort_test::bad_predicate_detected, srt_test, "bad_predicate_detected" );
+  // t.add( &sort_test::bad_predicate_detected, srt_test, "bad_predicate_detected" );
 
   adj_test a_test;
 
@@ -651,7 +651,7 @@ int main( int argc, const char** argv )
   t.add( &partial_test::parsrtc0, part_test, "parsrtc0" );
   t.add( &partial_test::parsrtc1, part_test, "parsrtc1" );
   t.add( &partial_test::parsrtc2, part_test, "parsrtc2" );
-  t.add( &partial_test::bad_predicate_detected, part_test, "bad_predicate_detected partial_test" );
+  // t.add( &partial_test::bad_predicate_detected, part_test, "bad_predicate_detected partial_test" );
 
   heap_test hp_test;
 
@@ -932,8 +932,15 @@ int main( int argc, const char** argv )
 
   ref_wrapper_test ref_test;
 
-  t.add( &ref_wrapper_test::ref, ref_test, "ref" );
-  t.add( &ref_wrapper_test::cref, ref_test, "cref" );
+  exam::test_suite::test_case_type ref_w_tc[4];
+
+  ref_w_tc[0] = tt_tc[9];
+  ref_w_tc[1] = tt_tc[10];
+  ref_w_tc[2] = tt_tc[11];
+
+  t.add( &ref_wrapper_test::ref, ref_test, "reference_wrapper helper ref", ref_w_tc, ref_w_tc + 2 );
+  t.add( &ref_wrapper_test::cref, ref_test, "reference_wrapper helper cref", ref_w_tc, ref_w_tc + 2 );
+  t.add( &ref_wrapper_test::types, ref_test, "reference_wrapper types", ref_w_tc, ref_w_tc + 3 );
 
   locale_test ltest;
 

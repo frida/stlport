@@ -30,6 +30,54 @@ namespace detail {
 
 struct __has_type_selector
 {
+   // T::result_type?
+#ifdef __clang__
+    template <class T>
+    static typename remove_reference<decltype( sizeof(typename T::result_type*), declval<true_type>())>::type __test_result_type( int );
+#else
+    template <class T>
+    static typename remove_reference<decltype( declval<typename T::result_type>(), declval<true_type>())>::type __test_result_type( int );
+#endif
+
+    template <class>
+    static false_type __test_result_type( ... );
+
+     // T::argument_type?
+#ifdef __clang__
+    template <class T>
+    static typename remove_reference<decltype( sizeof(typename T::argument_type*), declval<true_type>())>::type __test_argument_type( int );
+#else
+    template <class T>
+    static typename remove_reference<decltype( declval<typename T::argument_type>(), declval<true_type>())>::type __test_argument_type( int );
+#endif
+
+    template <class>
+    static false_type __test_argument_type( ... );
+
+     // T::first_argument_type?
+#ifdef __clang__
+    template <class T>
+    static typename remove_reference<decltype( sizeof(typename T::first_argument_type*), declval<true_type>())>::type __test_first_argument_type( int );
+#else
+    template <class T>
+    static typename remove_reference<decltype( declval<typename T::first_argument_type>(), declval<true_type>())>::type __test_first_argument_type( int );
+#endif
+
+    template <class>
+    static false_type __test_first_argument_type( ... );
+
+     // T::second_argument_type?
+#ifdef __clang__
+    template <class T>
+    static typename remove_reference<decltype( sizeof(typename T::second_argument_type*), declval<true_type>())>::type __test_second_argument_type( int );
+#else
+    template <class T>
+    static typename remove_reference<decltype( declval<typename T::second_argument_type>(), declval<true_type>())>::type __test_second_argument_type( int );
+#endif
+
+    template <class>
+    static false_type __test_second_argument_type( ... );
+
     // T::element_type?
 #ifdef __clang__
     template <class T>
@@ -190,6 +238,10 @@ struct __has_type_selector
 };
 
 } // namespace detail
+
+template <class T>
+inline T* addressof(T& r) noexcept
+{ return reinterpret_cast<T*>( &const_cast<char&>( reinterpret_cast<const volatile char&>(r) ) ); }
 
 _STLP_END_NAMESPACE
 

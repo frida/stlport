@@ -140,6 +140,7 @@ int EXAM_IMPL(partial_test::parsrtc2)
   return EXAM_RESULT;
 }
 
+#if 0
 int EXAM_IMPL(partial_test::bad_predicate_detected)
 {
 #if defined (_STLP_DO_CHECK_BAD_PREDICATE)
@@ -170,3 +171,4 @@ int EXAM_IMPL(partial_test::bad_predicate_detected)
 #endif // _STLP_DO_CHECK_BAD_PREDICATE
   return EXAM_RESULT;
 }
+#endif

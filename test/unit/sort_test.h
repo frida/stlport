@@ -14,7 +14,7 @@ class sort_test
     int EXAM_DECL(sort4);
     int EXAM_DECL(stblsrt1);
     int EXAM_DECL(stblsrt2);
-    int EXAM_DECL(bad_predicate_detected);
+    // int EXAM_DECL(bad_predicate_detected);
 
   private:
     static bool string_less(const char* a_, const char* b_)

@@ -34,7 +34,7 @@ class partial_test
     int EXAM_DECL(parsrtc0);
     int EXAM_DECL(parsrtc1);
     int EXAM_DECL(parsrtc2);
-    int EXAM_DECL(bad_predicate_detected);
+    // int EXAM_DECL(bad_predicate_detected);
 
   protected:
     static bool str_compare(const char* a_, const char* b_)

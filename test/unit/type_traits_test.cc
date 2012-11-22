@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-22 18:05:05 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-23 01:18:49 ptr>
 
 /*
  * Copyright (c) 2007, 2009-2012
@@ -939,6 +939,7 @@ int EXAM_IMPL(type_traits_test::result_of)
 {
   typedef bool (&PF1)();
   typedef short (*PF2)(long);
+  typedef int (F0)();
 
   struct S
   {
@@ -952,14 +953,14 @@ int EXAM_IMPL(type_traits_test::result_of)
   typedef void (S::*PMF)(long) const;
   typedef char S::*PMD;
 
+  EXAM_CHECK( (std::is_same<std::result_of<int (double)>::type,int>::value) );
+  EXAM_CHECK( (std::is_same<std::result_of<F0>::type,int>::value) );
+  EXAM_CHECK( (std::is_same<std::result_of<PF2>::type,short>::value) );
+
   EXAM_CHECK( (std::is_same<std::result_of<S(int)>::type, short>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<S&(unsigned char, const int&)>::type, double>::value) );
-  // EXAM_CHECK( (std::is_same<std::result_of<S&(unsigned char, int&)>::type, double>::value) );
-  // cerr << typeid(std::result_of<S(int)>::type).name() << endl;
-  //cerr << is_same<std::result_of<S(int)>::type,true_type>::value << endl;
-  //cerr << is_same<std::result_of<S&(unsigned char, int&)>::type,true_type>::value << endl;
-  // cerr << typeid(std::result_of<S&(unsigned char, int&)>::type).name() << endl;
-  // cerr << typeid(PF2).name() << endl;
+  EXAM_CHECK( (std::is_same<std::result_of<S&(unsigned char, int&)>::type, double>::value) );
+
   EXAM_CHECK( (std::is_same<std::result_of<PF1()>::type, bool>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<PMF(std::unique_ptr<S>, int)>::type, void>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<PMD(S)>::type, char&&>::value) );

@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-22 16:20:31 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-23 00:59:54 ptr>
 
 /*
  * Copyright (c) 2007, 2008, 2010-2011
@@ -1605,31 +1605,30 @@ struct underlying_type
 
 template <class Fn, class ... ArgTypes> struct result_of;
 
+template <class R, class ... ArgTypes>
+struct result_of<R (*)(ArgTypes...)>
+{
+    typedef R type;
+};
+
+template <class R, class _Tp, class ... ArgTypes>
+struct result_of<R (_Tp::*)(ArgTypes...)>
+{
+    typedef R type;
+};
+
+template <class R, class _Tp, class ...ArgTypes>
+struct result_of<R (_Tp::*)(ArgTypes...) const>
+{
+    typedef R type;
+};
+
 namespace detail {
 
-template <bool, class Fn, class ... ArgTypes>
-struct result_of_mem_function
-{
-};
-
-// pointer on member data
+template <bool, class Fn, class ... ArgTypes> struct __member_selector;
 
 template <class R, class T, class A, class ... ArgTypes>
-struct result_of_mem_function<false,R T::*,A,ArgTypes...>
-{
-  private:
-    static R&& __test( const T& );
-
-    static const R& __test( const T* );
-
-  public:
-    typedef decltype(__test(declval<A>())) type;
-};
-
-// pointer on member function
-
-template <class R, class T, class A, class ... ArgTypes>
-class result_of_mem_function<true,R T::*,A,ArgTypes...>
+class __member_selector<false,R T::*,A,ArgTypes...> // member function
 {
   private:
     typedef R T::* _Fn;
@@ -1644,72 +1643,46 @@ class result_of_mem_function<true,R T::*,A,ArgTypes...>
     typedef decltype( (__test<A>(declval<A>()).*declval<_Fn>())(declval<ArgTypes>()...) ) type;
 };
 
-#if 0
-template <bool, class Fn, class ... ArgTypes>
-struct result_of_function
+template <class R, class T, class A, class ... ArgTypes>
+class __member_selector<true,R T::*,A,ArgTypes...> // member data
 {
-    typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
-    // typedef Fn type;
+  private:
+    static R&& __test( const T& );
+
+    static const R& __test( const T* );
+
+  public:
+    typedef decltype(__test(declval<A>())) type;
 };
+
+template <bool, class Fn, class ...ArgTypes>
+struct __is_function : // member data or member function
+        public __member_selector<is_member_object_pointer<Fn>::value,Fn,ArgTypes...>
+{ };
+
+template <class Fn, class ...ArgTypes>
+struct __is_function<true,Fn,ArgTypes...> // function
+{
+    typedef decltype(Fn(declval<ArgTypes>()...)) type;
+};
+
+template <bool, class Fn, class ... ArgTypes>
+struct __is_functor : // function or member data or member function
+        public __is_function<!is_member_pointer<Fn>::value,Fn,ArgTypes...>
+{ };
 
 template <class Fn, class ... ArgTypes>
-struct result_of_function<true,Fn,ArgTypes...>
+struct __is_functor<true,Fn,ArgTypes...> // functor
 {
-    typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
-};
-#endif
-
-template <bool, class Fn, class ... ArgTypes>
-struct result_of_functor
-{
-    typedef typename result_of_mem_function<is_member_function_pointer<Fn>::value,Fn,ArgTypes...>::type type;
-};
-
-template <class Fn, class ... ArgTypes>
-struct result_of_functor<true,Fn,ArgTypes...>
-{
-    // typedef decltype( declval<typename remove_reference<Fn>::type>()(declval<ArgTypes>()...) ) type;
-    // Note: we can't (?) accept non-const reference as arguments, due to declval,
-    // that remove reference...
     typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
 };
 
 } // namespace detail
 
-#if 1
 template <class Fn, class ... ArgTypes>
-struct result_of<Fn(ArgTypes...)>
-{
-    typedef typename detail::result_of_functor</* is_function<typename remove_reference<Fn>::type>::value || */ !is_member_pointer<Fn>::value,Fn,ArgTypes...>::type type;
-};
-#else
-
-template <class R, class ... ArgTypes>
-struct result_of<R (*)(ArgTypes...)>
-{
-    typedef R type;
-};
-
-template <class R, class _Tp, class ... ArgTypes>
-struct result_of<R (_Tp::*)(ArgTypes...)>
-{
-    typedef R type;
-};
-
-template <class Fn, class ... ArgTypes>
-struct result_of<Fn(ArgTypes...)>
-{
-    // typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
-    typedef typename detail::result_of_functor</* is_function<typename remove_reference<Fn>::type>::value || */ !is_member_pointer<Fn>::value,Fn,ArgTypes...>::type type;
-};
-
-#endif
-
-// template <class T, class Fn, class ... ArgTypes>
-// struct result_of<(T::*Fn)(ArgTypes...)>
-// {
-    // typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
-// };
+struct result_of<Fn(ArgTypes...)> :
+    public detail::__is_functor<!is_function<Fn(ArgTypes...)>::value,Fn,ArgTypes...>
+{ };
 
 #undef __CV_SPEC
 #undef __SPEC_

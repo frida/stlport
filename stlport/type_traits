@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-04-20 17:23:24 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-22 16:20:31 ptr>
 
 /*
  * Copyright (c) 2007, 2008, 2010-2011
@@ -333,10 +333,44 @@ struct is_reference :
 
 template <class _Tp>
 struct is_function :
-    public integral_constant<bool, !(detail::__instance<_Tp>::__value
-                                     || detail::__is_union_or_class<_Tp>::value
-                                     || is_lvalue_reference<_Tp>::value
-                                     || is_void<_Tp>::value)>
+    public false_type
+{ };
+
+template <class Fn, class ...ArgTypes>
+struct is_function<Fn(ArgTypes...)> :
+    public integral_constant<bool, !(detail::__is_union_or_class<Fn>::value
+                                    || is_lvalue_reference<Fn>::value
+                                    || is_void<Fn>::value )>
+{ };
+
+template <class R, class ...ArgTypes>
+struct is_function<R (*)(ArgTypes...)> :
+    public false_type
+{ };
+
+template <class R, class _Tp, class ...ArgTypes>
+struct is_function<R (_Tp::*)(ArgTypes...)> :
+    public false_type
+{ };
+
+template <class R, class _Tp, class ...ArgTypes>
+struct is_function<R (_Tp::*)(ArgTypes...) const> :
+    public false_type
+{ };
+
+template <class R, class _Tp, class ...ArgTypes>
+struct is_function<R (_Tp::*)(ArgTypes...) volatile> :
+    public false_type
+{ };
+
+template <class R, class _Tp, class ...ArgTypes>
+struct is_function<R (_Tp::*)(ArgTypes...) const volatile> :
+    public false_type
+{ };
+
+template <class R, class _Tp>
+struct is_function<R _Tp::*> :
+    public false_type
 { };
 
 template <class _Tp>
@@ -348,49 +382,69 @@ struct is_member_object_pointer :
 
 template <class _Tp1, class _Tp2>
 struct is_member_object_pointer<_Tp1 _Tp2::*> :
-    public integral_constant<bool, !is_function<_Tp1>::value>
+    public true_type
+{ };
+
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_object_pointer<_Tp1 (_Tp2::*)(ArgTypes...)> :
+    public false_type
 { };
 
 template <class _Tp1, class _Tp2>
 struct is_member_object_pointer<_Tp1 _Tp2::* const> :
-    public integral_constant<bool, !is_function<_Tp1>::value>
+    public true_type
+{ };
+
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_object_pointer<_Tp1 (_Tp2::*)(ArgTypes...) const> :
+    public false_type
 { };
 
 template <class _Tp1, class _Tp2>
 struct is_member_object_pointer<_Tp1 _Tp2::* volatile> :
-    public integral_constant<bool, !is_function<_Tp1>::value>
+    public true_type
+{ };
+
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_object_pointer<_Tp1 (_Tp2::*)(ArgTypes...) volatile> :
+    public false_type
 { };
 
 template <class _Tp1, class _Tp2>
 struct is_member_object_pointer<_Tp1 _Tp2::* const volatile> :
-    public integral_constant<bool, !is_function<_Tp1>::value>
+    public true_type
 { };
 
-template <class _Tp>
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_object_pointer<_Tp1 (_Tp2::*)(ArgTypes...) const volatile> :
+    public false_type
+{ };
+
+template <class _Tp, class ...ArgTypes>
 struct is_member_function_pointer :
     public false_type
 { };
 
 // _SPEC_FULL2(is_member_function_pointer,_Tp1 _Tp2::*,is_function<_Tp1>::value);
 
-template <class _Tp1, class _Tp2>
-struct is_member_function_pointer<_Tp1 _Tp2::*> :                         
-    public integral_constant<bool, is_function<_Tp1>::value> 
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_function_pointer<_Tp1 (_Tp2::*)(ArgTypes...)> :
+    public true_type
 { };
 
-template <class _Tp1, class _Tp2>
-struct is_member_function_pointer<_Tp1 _Tp2::* const> :
-    public integral_constant<bool, is_function<_Tp1>::value>
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_function_pointer<_Tp1 (_Tp2::*)(ArgTypes...) const> :
+    public true_type
 { };
 
-template <class _Tp1, class _Tp2>
-struct is_member_function_pointer<_Tp1 _Tp2::* volatile> :
-    public integral_constant<bool, is_function<_Tp1>::value>
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_function_pointer<_Tp1 (_Tp2::*)(ArgTypes...) volatile> :
+    public true_type
 { };
 
-template <class _Tp1, class _Tp2>
-struct is_member_function_pointer<_Tp1 _Tp2::* const volatile> :
-    public integral_constant<bool, is_function<_Tp1>::value>
+template <class _Tp1, class _Tp2, class ...ArgTypes>
+struct is_member_function_pointer<_Tp1 (_Tp2::*)(ArgTypes...) const volatile> :
+    public true_type
 { };
 
 template <class _Tp>
@@ -1622,11 +1676,34 @@ struct result_of_functor<true,Fn,ArgTypes...>
 
 } // namespace detail
 
+#if 1
 template <class Fn, class ... ArgTypes>
 struct result_of<Fn(ArgTypes...)>
 {
     typedef typename detail::result_of_functor</* is_function<typename remove_reference<Fn>::type>::value || */ !is_member_pointer<Fn>::value,Fn,ArgTypes...>::type type;
 };
+#else
+
+template <class R, class ... ArgTypes>
+struct result_of<R (*)(ArgTypes...)>
+{
+    typedef R type;
+};
+
+template <class R, class _Tp, class ... ArgTypes>
+struct result_of<R (_Tp::*)(ArgTypes...)>
+{
+    typedef R type;
+};
+
+template <class Fn, class ... ArgTypes>
+struct result_of<Fn(ArgTypes...)>
+{
+    // typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) type;
+    typedef typename detail::result_of_functor</* is_function<typename remove_reference<Fn>::type>::value || */ !is_member_pointer<Fn>::value,Fn,ArgTypes...>::type type;
+};
+
+#endif
 
 // template <class T, class Fn, class ... ArgTypes>
 // struct result_of<(T::*Fn)(ArgTypes...)>

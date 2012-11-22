@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-22 16:08:19 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-22 18:05:05 ptr>
 
 /*
  * Copyright (c) 2007, 2009-2012
@@ -961,7 +961,7 @@ int EXAM_IMPL(type_traits_test::result_of)
   // cerr << typeid(std::result_of<S&(unsigned char, int&)>::type).name() << endl;
   // cerr << typeid(PF2).name() << endl;
   EXAM_CHECK( (std::is_same<std::result_of<PF1()>::type, bool>::value) );
-//  EXAM_CHECK( (std::is_same<std::result_of<PMF(std::unique_ptr<S>, int)>::type, void>::value) );
+  EXAM_CHECK( (std::is_same<std::result_of<PMF(std::unique_ptr<S>, int)>::type, void>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<PMD(S)>::type, char&&>::value) );
   EXAM_CHECK( (std::is_same<std::result_of<PMD(const S*)>::type, const char&>::value) );
 

@@ -169,7 +169,6 @@ class reference_wrapper :
     _Tp& get() const noexcept
       { return *_ref; }
 
-
     template <class ...ArgTypes>
     typename result_of<_Tp&(ArgTypes&&...)>::type
       operator ()(ArgTypes&&...) const;
@@ -184,12 +183,7 @@ class reference_wrapper<Fn(ArgTypes...)> :
 {
   public:
     typedef typename remove_reference<Fn>::type /* Fn */ type;
-    // typedef typename std::detail::result_of_functor</* is_function<typename remove_reference<Fn>::type>::value || */ !is_member_pointer<Fn>::value,Fn,ArgTypes...>::type result_type;
-    // typedef short result_type;
     typedef decltype( declval<type>()( declval<ArgTypes>()... ) ) result_type;
-    // typedef typename conditional<is_function<typename remove_reference<Fn>::type>::value,decltype(Fn( declval<ArgTypes>()... )),decltype( declval<type>()( declval<ArgTypes>()... ) )>::type result_type;
-    // typedef typename B::__functor_aux<is_function<typename remove_reference<Fn>::type>::value,Fn,ArgTypes...>::result_type result_type;
-    // typedef typename B::__functor_aux<is_function<Fn(ArgTypes...)>::value,Fn,ArgTypes...>::result_type result_type;
     // typedef ... argument_type;
     // typedef ... first_argument_type;
     // typedef ... second_argument_type;
@@ -209,7 +203,6 @@ class reference_wrapper<Fn(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
-
 
     // template <class ...ArgTypes>
     // typename result_of<Fn&(ArgTypes&&...)>::type
@@ -242,6 +235,7 @@ class reference_wrapper<R (*)(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
+
   private:
     typename remove_reference<type>::type* _ref;
 };
@@ -269,16 +263,17 @@ class reference_wrapper<R (T0::*)(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
-    private:
-      type* _ref;
+
+  private:
+    type* _ref;
 };
 
 template <class R, class T0, class ...ArgTypes>
-class reference_wrapper<R (T0::*const)(ArgTypes...)> :
+class reference_wrapper<R (T0::*)(ArgTypes...) const> :
     public _STLP_PRIV __arg1<sizeof...(ArgTypes)+1,const T0*,ArgTypes...>
 {
   public:
-    typedef R (T0::*const type)(ArgTypes...);
+    typedef R (T0::*type)(ArgTypes...) const;
     typedef R result_type;
     // typedef const T0* argument_type;
 
@@ -296,16 +291,17 @@ class reference_wrapper<R (T0::*const)(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
-    private:
-      type* _ref;
+
+  private:
+    type* _ref;
 };
 
 template <class R, class T0, class ...ArgTypes>
-class reference_wrapper<R (T0::*volatile)(ArgTypes...)> :
+class reference_wrapper<R (T0::*)(ArgTypes...) volatile> :
     public _STLP_PRIV __arg1<sizeof...(ArgTypes)+1,volatile T0*,ArgTypes...>
 { 
   public:
-    typedef R (T0::*volatile type)(ArgTypes...);
+    typedef R (T0::*type)(ArgTypes...) volatile;
     typedef R result_type;
     // typedef volatile T0* argument_type;
     
@@ -323,16 +319,17 @@ class reference_wrapper<R (T0::*volatile)(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
-    private:
-      type* _ref;
+
+  private:
+    type* _ref;
 };
 
 template <class R, class T0, class ...ArgTypes>
-class reference_wrapper<R (T0::*const volatile)(ArgTypes...)> :
+class reference_wrapper<R (T0::*)(ArgTypes...) const volatile> :
     public _STLP_PRIV __arg1<sizeof...(ArgTypes)+1,const volatile T0*,ArgTypes...>
 { 
   public:
-    typedef R (T0::*const volatile type)(ArgTypes...);
+    typedef R (T0::*type)(ArgTypes...) const volatile;
     typedef R result_type;
     // typedef const volatile T0* argument_type;
     
@@ -350,8 +347,9 @@ class reference_wrapper<R (T0::*const volatile)(ArgTypes...)> :
       { return *_ref; }
     type& get() const noexcept
       { return *_ref; }
-    private:
-      type* _ref;
+
+  private:
+    type* _ref;
 };
 
 template <class _Tp>
@@ -370,6 +368,11 @@ template <class _Tp>
 reference_wrapper<const _Tp> cref( reference_wrapper<const _Tp>& __x ) noexcept
 { return cref( __x.get() ); }
 
+template <class _Tp>
+void ref( const _Tp&& ) = delete;
+
+template <class _Tp>
+void cref( const _Tp&& ) = delete;
 
 template <class _Arg, class _Result>
 struct unary_function {

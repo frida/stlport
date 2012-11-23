@@ -2,14 +2,6 @@
 
 #include <functional>
 #include <type_traits>
-#include <typeinfo>
-#include <iostream>
-#include <iomanip>
-// #include <demangle.h>
-
-//extern "C" {
-//extern char* cplus_demangle( const char*, int );
-//}
 
 using namespace std;
 
@@ -75,28 +67,6 @@ int EXAM_IMPL(ref_wrapper_test::cref)
   return EXAM_RESULT;
 }
 
-namespace A {
-
-namespace B {
-
-//template <class _Tp, bool>
-//struct __ref_wrapper_aux
-//{
-  // typedef short result_type;
-//};
-
-//template <class _Tp>
-//struct __ref_wrapper_aux<_Tp,true>
-//{
-//  typedef short result_type;
-//};
-
-
-} // namespace B
-
-
-} // namespace A
-
 bool bf1()
 { return true; }
 
@@ -108,8 +78,6 @@ short sf1( long )
 
 int EXAM_IMPL(ref_wrapper_test::types)
 {
-  using namespace A;
-
   typedef bool (&PF1)();
   typedef bool (F0)();
   typedef short (*PF0)();
@@ -128,13 +96,19 @@ int EXAM_IMPL(ref_wrapper_test::types)
         { }
       int fi(long)
         { return 1; }
+      int fic(long) const
+        { return 1; }
+      int fiv(long) volatile
+        { return 1; }
+      int ficv(long) const volatile
+        { return 1; }
       char data;
   };
 
   typedef int (S::*PMF)(long);
-  typedef int (S::*const PMFc)(long);
-  typedef int (S::*volatile PMFv)(long);
-  typedef int (S::*const volatile PMFcv)(long);
+  typedef int (S::*PMFc)(long) const;
+  typedef int (S::*PMFv)(long) volatile;
+  typedef int (S::*PMFcv)(long) const volatile;
 
   struct D {
       typedef int result_type;
@@ -191,7 +165,7 @@ int EXAM_IMPL(ref_wrapper_test::types)
   EXAM_CHECK((is_same<reference_wrapper<PMF>::first_argument_type,S*>::value));
   EXAM_CHECK((is_same<reference_wrapper<PMF>::second_argument_type,long>::value));
 
-  PMFc pmfc = &S::fi;
+  PMFc pmfc = &S::fic;
   EXAM_CHECK((is_same<reference_wrapper<PMFc>::argument_type,const S*>::value));
   EXAM_CHECK((is_same<reference_wrapper<PMFv>::argument_type,volatile S*>::value));
   EXAM_CHECK((is_same<reference_wrapper<PMFcv>::argument_type,const volatile S*>::value));
@@ -200,13 +174,6 @@ int EXAM_IMPL(ref_wrapper_test::types)
   EXAM_CHECK((is_same<reference_wrapper<D>::argument_type,double>::value));
   EXAM_CHECK((is_same<reference_wrapper<D>::first_argument_type,char*>::value));
   EXAM_CHECK((is_same<reference_wrapper<D>::second_argument_type,short&>::value));
-
-  // reference_wrapper<S&(long)> rs1(&s.fi);
-//  cerr << typeid(PF1).name() << endl;
-//  cerr << typeid(PF0).name() << endl;
-  // cerr << typeid(F0).name() << endl;
-  // cerr << typeid(A::reference_wrapper<S&(char, const int&)>).name() << endl;
-//  cerr << typeid(A::reference_wrapper<PMF>).name() << endl;
 
   return EXAM_RESULT;
 }

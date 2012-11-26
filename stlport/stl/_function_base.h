@@ -177,13 +177,70 @@ class reference_wrapper :
     typename remove_reference<type>::type* _ref;
 };
 
+namespace detail {
+
+template <bool, class Fn, class ... ArgTypes> struct __r_member_selector;
+
+template <class R, class T, class A, class ... ArgTypes>
+class __r_member_selector<false,R T::*,A,ArgTypes...> // member function
+{
+  private:
+    typedef R T::* _Fn;
+
+    template <class U>
+    static U __test( const T& );
+
+    template <class U>
+    static decltype(*declval<U>()) __test( ... );
+
+  public:
+    typedef decltype( (__test<A>(declval<A>()).*declval<_Fn>())(declval<ArgTypes>()...) ) result_type;
+};
+
+template <class R, class T, class A, class ... ArgTypes>
+class __r_member_selector<true,R T::*,A,ArgTypes...> // member data
+{
+  private:
+    static R&& __test( const T& );
+
+    static const R& __test( const T* );
+
+  public:
+    typedef decltype(__test(declval<A>())) result_type;
+};
+
+template <bool, class Fn, class ...ArgTypes>
+struct __r_is_function : // member data or member function
+        public __r_member_selector<is_member_object_pointer<Fn>::value,Fn,ArgTypes...>
+{ };
+
+template <class Fn, class ...ArgTypes>
+struct __r_is_function<true,Fn,ArgTypes...> // function
+{
+    typedef decltype(Fn(declval<ArgTypes>()...)) result_type;
+};
+
+template <bool, class Fn, class ... ArgTypes>
+struct __r_is_functor : // function or member data or member function
+        public __r_is_function<!is_member_pointer<Fn>::value,Fn,ArgTypes...>
+{ };
+
+template <class Fn, class ... ArgTypes>
+struct __r_is_functor<true,Fn,ArgTypes...> // functor
+{
+    typedef decltype( declval<Fn>()(declval<ArgTypes>()...) ) result_type;
+};
+
+} // namespace detail
+
 template <class Fn, class ...ArgTypes>
 class reference_wrapper<Fn(ArgTypes...)> :
-    public _STLP_PRIV __arg1<sizeof...(ArgTypes),ArgTypes...>
+    public _STLP_PRIV __arg1<sizeof...(ArgTypes),ArgTypes...>,
+    public detail::__r_is_functor<!is_function<Fn(ArgTypes...)>::value,Fn,ArgTypes...>
 {
   public:
     typedef typename remove_reference<Fn>::type /* Fn */ type;
-    typedef decltype( declval<type>()( declval<ArgTypes>()... ) ) result_type;
+    // typedef decltype( declval<type>()( declval<ArgTypes>()... ) ) result_type;
     // typedef ... argument_type;
     // typedef ... first_argument_type;
     // typedef ... second_argument_type;

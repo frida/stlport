@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-21 18:49:41 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-26 11:22:39 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -932,15 +932,16 @@ int main( int argc, const char** argv )
 
   ref_wrapper_test ref_test;
 
-  exam::test_suite::test_case_type ref_w_tc[4];
+  exam::test_suite::test_case_type ref_w_tc[5];
 
   ref_w_tc[0] = tt_tc[9];
   ref_w_tc[1] = tt_tc[10];
   ref_w_tc[2] = tt_tc[11];
 
-  t.add( &ref_wrapper_test::ref, ref_test, "reference_wrapper helper ref", ref_w_tc, ref_w_tc + 2 );
-  t.add( &ref_wrapper_test::cref, ref_test, "reference_wrapper helper cref", ref_w_tc, ref_w_tc + 2 );
-  t.add( &ref_wrapper_test::types, ref_test, "reference_wrapper types", ref_w_tc, ref_w_tc + 3 );
+  ref_w_tc[3] = t.add( &ref_wrapper_test::types, ref_test, "reference_wrapper types", ref_w_tc, ref_w_tc + 3 );
+  ref_w_tc[4] = t.add( &ref_wrapper_test::ctors, ref_test, "reference_wrapper ctors", ref_w_tc, ref_w_tc + 4 );
+  t.add( &ref_wrapper_test::ref, ref_test, "reference_wrapper helper ref", ref_w_tc[4] );
+  t.add( &ref_wrapper_test::cref, ref_test, "reference_wrapper helper cref", ref_w_tc[4] );
 
   locale_test ltest;
 

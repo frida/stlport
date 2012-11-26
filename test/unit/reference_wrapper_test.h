@@ -8,6 +8,7 @@
 class ref_wrapper_test
 {
   public:
+    int EXAM_DECL(ctors); 
     int EXAM_DECL(ref);
     int EXAM_DECL(cref);
     int EXAM_DECL(types);

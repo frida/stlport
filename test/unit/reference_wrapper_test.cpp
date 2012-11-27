@@ -16,6 +16,9 @@ short sf0()
 short sf1( long )
 { return 0; }
 
+short sf2( long )
+{ return 1; }
+
 typedef bool (&PF1)();
 typedef bool (F0)();
 typedef short (*PF0)();
@@ -89,6 +92,8 @@ int EXAM_IMPL(ref_wrapper_test::ctors)
 
 int EXAM_IMPL(ref_wrapper_test::ref)
 {
+  using namespace ref_wrapper_ns;
+
   typedef reference_wrapper<int> rr_type;
 
   EXAM_CHECK( (is_convertible<rr_type, int&>::value) );
@@ -117,11 +122,31 @@ int EXAM_IMPL(ref_wrapper_test::ref)
 
   EXAM_CHECK( j == 5 );
 
+  // reference_wrapper<F0> rf0 = std::ref( bf1 );
+  PF1 rf = bf1;
+
+  // reference_wrapper<F0> rf0 = std::ref( rf );
+
+  PF2 f2 = &sf1;
+  PF2 f3 = &sf2;
+
+  reference_wrapper<PF2> rf2 = std::ref( f2 );
+  reference_wrapper<PF2> rf3 = std::ref( f3 );
+
+  EXAM_CHECK( rf2(0L) == 0 );
+  EXAM_CHECK( rf3(0L) == 1 );
+
+  rf2 = rf3;
+
+  EXAM_CHECK( rf2(0L) == 1 );
+
   return EXAM_RESULT;
 }
 
 int EXAM_IMPL(ref_wrapper_test::cref)
 {
+  using namespace ref_wrapper_ns;
+
   typedef reference_wrapper<const int> crr_type;
 
   EXAM_CHECK( (is_convertible<crr_type, const int&>::value) );
@@ -145,6 +170,8 @@ int EXAM_IMPL(ref_wrapper_test::cref)
   j = 4;
 
   EXAM_CHECK( r1.get() == 4 );
+
+  // reference_wrapper<F0> rf0 = std::cref( bf1 );
 
   return EXAM_RESULT;
 }

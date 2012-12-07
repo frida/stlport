@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-11-26 11:22:39 ptr>
+// -*- C++ -*- Time-stamp: <2012-11-28 10:31:50 ptr>
 
 /*
  * Copyright (c) 2008-2011
@@ -942,6 +942,7 @@ int main( int argc, const char** argv )
   ref_w_tc[4] = t.add( &ref_wrapper_test::ctors, ref_test, "reference_wrapper ctors", ref_w_tc, ref_w_tc + 4 );
   t.add( &ref_wrapper_test::ref, ref_test, "reference_wrapper helper ref", ref_w_tc[4] );
   t.add( &ref_wrapper_test::cref, ref_test, "reference_wrapper helper cref", ref_w_tc[4] );
+  t.add( &ref_wrapper_test::invoke, ref_test, "reference_wrapper invoke", ref_w_tc[4] );
 
   locale_test ltest;
 

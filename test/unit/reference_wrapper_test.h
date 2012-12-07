@@ -12,6 +12,7 @@ class ref_wrapper_test
     int EXAM_DECL(ref);
     int EXAM_DECL(cref);
     int EXAM_DECL(types);
+    int EXAM_DECL(invoke);
 };
 
 #endif // __TEST_REFERENCE_WRAPPER_H

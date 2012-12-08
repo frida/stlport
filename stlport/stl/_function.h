@@ -38,54 +38,267 @@
 
 _STLP_BEGIN_NAMESPACE
 
-template <class _Tp>
-struct not_equal_to : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x != __y; }
+template <class _Tp = void>
+struct not_equal_to /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x != __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
 };
 
-template <class _Tp>
-struct greater : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x > __y; }
+template <>
+struct not_equal_to<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) != _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) != _STLP_STD::forward<U>(u);}
 };
 
-template <class _Tp>
-struct greater_equal : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x >= __y; }
+template <class _Tp = void>
+struct greater /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x > __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
 };
 
-template <class _Tp>
-struct less_equal : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x <= __y; }
+template <>
+struct greater<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) > _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) > _STLP_STD::forward<U>(u);}
 };
 
-template <class _Tp>
-struct divides : public binary_function<_Tp, _Tp, _Tp> {
-  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x / __y; }
+template <class _Tp = void>
+struct greater_equal /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x >= __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
 };
 
-template <class _Tp>
-struct modulus : public binary_function<_Tp, _Tp, _Tp> {
-  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x % __y; }
+template <>
+struct greater_equal<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) >= _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) >= _STLP_STD::forward<U>(u);}
 };
 
-template <class _Tp>
-struct negate : public unary_function<_Tp, _Tp> {
-  _Tp operator()(const _Tp& __x) const { return -__x; }
+template <class _Tp = void>
+struct less_equal /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x <= __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
 };
 
-template <class _Tp>
-struct logical_and : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x && __y; }
+template <>
+struct less_equal<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) <= _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) <= _STLP_STD::forward<U>(u);}
 };
 
-template <class _Tp>
-struct logical_or : public binary_function<_Tp, _Tp,bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x || __y; }
+template <class _Tp = void>
+struct divides /* : public binary_function<_Tp, _Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x / __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
 };
 
-template <class _Tp>
-struct logical_not : public unary_function<_Tp, bool> {
-  bool operator()(const _Tp& __x) const { return !__x; }
+template <>
+struct divides<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) / _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) / _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct modulus /* : public binary_function<_Tp, _Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x % __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
+};
+
+template <>
+struct modulus<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) % _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) % _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct negate /* : public unary_function<_Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x) const
+      { return -__x; }
+
+    typedef _Tp argument_type;
+    typedef _Tp result_type;
+};
+
+template <>
+struct negate<void>
+{
+    template <class T>
+    auto operator ()(T&& t) const -> decltype(-_STLP_STD::forward<T>(t))
+      { return -_STLP_STD::forward<T>(t);}
+};
+
+template <class _Tp = void>
+struct logical_and /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x && __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
+};
+
+template <>
+struct logical_and<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) && _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) && _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct logical_or /* : public binary_function<_Tp, _Tp,bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x || __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
+};
+
+template <>
+struct logical_or<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) || _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) || _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct logical_not /* : public unary_function<_Tp, bool> */
+{
+    bool operator()(const _Tp& __x) const
+      { return !__x; }
+
+    typedef _Tp argument_type;
+    typedef bool result_type;
+};
+
+template <>
+struct logical_not<void>
+{
+    template <class T>
+    auto operator ()(T&& t) const -> decltype(!_STLP_STD::forward<T>(t))
+      { return !_STLP_STD::forward<T>(t);}
+};
+
+template <class _Tp = void>
+struct bit_and /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x & __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
+};
+
+template <>
+struct bit_and<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) & _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) & _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct bit_or /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x | __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
+};
+
+template <>
+struct bit_or<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) | _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) | _STLP_STD::forward<U>(u);}
+};
+
+template <class _Tp = void>
+struct bit_xor /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x ^ __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
+};
+
+template <>
+struct bit_xor<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) ^ _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) ^ _STLP_STD::forward<U>(u); }
+};
+
+template <class _Tp = void>
+struct bit_not /* : public unary_function<_Tp, bool> */
+{
+    bool operator()(const _Tp& __x) const
+      { return ~__x; }
+
+    typedef _Tp argument_type;
+    typedef bool result_type;
+};
+
+template <>
+struct bit_not<void>
+{
+    template <class T>
+    auto operator ()(T&& t) const -> decltype(~_STLP_STD::forward<T>(t))
+      { return ~_STLP_STD::forward<T>(t);}
 };
 
 #if !defined (_STLP_NO_EXTENSIONS)
@@ -95,15 +308,16 @@ template <class _Tp> inline _Tp identity_element(multiplies<_Tp>) { return _Tp(1
 #endif
 
 template <class _Predicate>
-class unary_negate :
-    public unary_function<typename _Predicate::argument_type, bool>
+class unary_negate /* :
+                      public unary_function<typename _Predicate::argument_type, bool> */
 {
-  private:
-    typedef unary_function<typename _Predicate::argument_type, bool> _Base;
+    // private:
+    // typedef unary_function<typename _Predicate::argument_type, bool> _Base;
   public:
-    typedef typename _Base::argument_type argument_type;
-  private:
-    typedef typename conditional<is_pod<argument_type>::value,argument_type,typename add_lvalue_reference<typename add_const<argument_type>::type>::type>::type _ArgParamType;
+    typedef typename _Predicate::argument_type argument_type;
+    typedef bool result_type;
+   // private:
+    // typedef typename conditional<is_pod<argument_type>::value,argument_type,typename add_lvalue_reference<typename add_const<argument_type>::type>::type>::type _ArgParamType;
   protected:
     _Predicate _M_pred;
   public:
@@ -111,30 +325,29 @@ class unary_negate :
         _M_pred(__x)
       {}
 
-    bool operator()(_ArgParamType __x) const
+    bool operator()(const typename _Predicate::argument_type& __x) const
       { return !_M_pred(__x); }
 };
 
 template <class _Predicate>
-inline unary_negate<_Predicate>
-not1(const _Predicate& __pred) {
-  return unary_negate<_Predicate>(__pred);
-}
+inline unary_negate<_Predicate> not1(const _Predicate& __pred)
+{ return unary_negate<_Predicate>(__pred); }
 
 template <class _Predicate>
-class binary_negate :
-    public binary_function<typename _Predicate::first_argument_type, typename _Predicate::second_argument_type, bool>
+class binary_negate /* :
+                       public binary_function<typename _Predicate::first_argument_type, typename _Predicate::second_argument_type, bool> */
 {
-  private:
-    typedef binary_function<typename _Predicate::first_argument_type, typename _Predicate::second_argument_type, bool> _Base;
+    // private:
+    // typedef binary_function<typename _Predicate::first_argument_type, typename _Predicate::second_argument_type, bool> _Base;
 
   public:
-    typedef typename _Base::first_argument_type first_argument_type;
-    typedef typename _Base::second_argument_type second_argument_type;
+    typedef typename _Predicate::first_argument_type first_argument_type;
+    typedef typename _Predicate::second_argument_type second_argument_type;
+    typedef bool result_type;
 
-  private:
-    typedef typename conditional<is_pod<first_argument_type>::value,first_argument_type,typename add_lvalue_reference<typename add_const<first_argument_type>::type>::type>::type _FstArgParamType;
-    typedef typename conditional<is_pod<second_argument_type>::value,second_argument_type,typename add_lvalue_reference<typename add_const<second_argument_type>::type>::type>::type _SndArgParamType;
+    // private:
+    // typedef typename conditional<is_pod<first_argument_type>::value,first_argument_type,typename add_lvalue_reference<typename add_const<first_argument_type>::type>::type>::type _FstArgParamType;
+    // typedef typename conditional<is_pod<second_argument_type>::value,second_argument_type,typename add_lvalue_reference<typename add_const<second_argument_type>::type>::type>::type _SndArgParamType;
 
   protected:
     _Predicate _M_pred;
@@ -143,7 +356,7 @@ class binary_negate :
     explicit binary_negate(const _Predicate& __x) :
         _M_pred(__x)
       { }
-    bool operator()(_FstArgParamType __x, _SndArgParamType __y) const
+    bool operator()(const typename _Predicate::first_argument_type& __x, const typename _Predicate::second_argument_type& __y) const
       { return !_M_pred(__x, __y); }
 };
 

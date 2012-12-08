@@ -568,26 +568,34 @@ protected:
 #endif
 };
 
-template <class _Tp>
-struct equal_to : public binary_function<_Tp, _Tp, bool> {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x == __y; }
+template <class _Tp = void>
+struct equal_to /* : public binary_function<_Tp, _Tp, bool> */
+{
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x == __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
 };
 
-template <class _Tp>
-struct less : public binary_function<_Tp,_Tp,bool>
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-/* less is the default template parameter for many STL containers, to fully use
- * the move constructor feature we need to know that the default less is just a
- * functor.
- */
-              // , public __stlport_class<less<_Tp> >
-#endif
+template <class _Tp = void>
+struct less /* : public binary_function<_Tp,_Tp,bool> */
 {
-  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x < __y; }
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x < __y; }
 
-#if defined (_STLP_USE_PARTIAL_SPEC_WORKAROUND) && !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
-  void _M_swap_workaround(less<_Tp>& __x) {}
-#endif
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef bool result_type;
+};
+
+template <>
+struct less<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) < _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) < _STLP_STD::forward<U>(u);}
 };
 
 _STLP_MOVE_TO_PRIV_NAMESPACE
@@ -600,29 +608,71 @@ equal_to<_Tp> __equal_to(_Tp* ) { return equal_to<_Tp>(); }
 
 _STLP_MOVE_TO_STD_NAMESPACE
 
-template <class _Tp>
-struct plus : public binary_function<_Tp, _Tp, _Tp> {
-  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x + __y; }
+template <class _Tp = void>
+struct plus /* : public binary_function<_Tp, _Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x + __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
 };
 
-template <class _Tp>
-struct minus : public binary_function<_Tp, _Tp, _Tp> {
-  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x - __y; }
+template <class _Tp = void>
+struct minus /* : public binary_function<_Tp, _Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x - __y; }
+
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
 };
 
-_STLP_MOVE_TO_PRIV_NAMESPACE
+template <>
+struct plus<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) + _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) + _STLP_STD::forward<U>(u);}
+};
+
+template <>
+struct minus<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) - _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) - _STLP_STD::forward<U>(u);}
+};
+
+//_STLP_MOVE_TO_PRIV_NAMESPACE
+//
+//template <class _Tp>
+//plus<_Tp> __plus(_Tp* ) { return plus<_Tp>(); }
+//
+//template <class _Tp>
+//minus<_Tp> __minus(_Tp* ) { return minus<_Tp>(); }
+//
+//_STLP_MOVE_TO_STD_NAMESPACE
 
 template <class _Tp>
-plus<_Tp> __plus(_Tp* ) { return plus<_Tp>(); }
+struct multiplies /* : public binary_function<_Tp, _Tp, _Tp> */
+{
+    _Tp operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x * __y; }
 
-template <class _Tp>
-minus<_Tp> __minus(_Tp* ) { return minus<_Tp>(); }
+    typedef _Tp first_argument_type;
+    typedef _Tp second_argument_type;
+    typedef _Tp result_type;
+};
 
-_STLP_MOVE_TO_STD_NAMESPACE
-
-template <class _Tp>
-struct multiplies : public binary_function<_Tp, _Tp, _Tp> {
-  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x * __y; }
+template <>
+struct multiplies<void>
+{
+    template <class T, class U>
+    auto operator ()(T&& t, U&& u) const -> decltype(_STLP_STD::forward<T>(t) * _STLP_STD::forward<U>(u))
+      { return _STLP_STD::forward<T>(t) * _STLP_STD::forward<U>(u);}
 };
 
 _STLP_MOVE_TO_PRIV_NAMESPACE

@@ -35,6 +35,7 @@
 // #endif
 
 #include <type_traits>
+#include <utility>
 
 #ifndef _STLP_INTERNAL_HAS_TYPE_H
 #  include <stl/_has_type.h>

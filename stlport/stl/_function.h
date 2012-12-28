@@ -364,6 +364,72 @@ template <class _Predicate>
 inline binary_negate<_Predicate> not2(const _Predicate& __pred)
 { return binary_negate<_Predicate>(__pred); }
 
+
+template <class _Tp>
+struct is_bind_expression :
+    public false_type
+{ };
+
+namespace placeholders {
+
+namespace detail {
+
+template <int Nm>
+struct placeholder
+{ };
+
+} // namespace detail
+
+extern const detail::placeholder<1> _1;
+extern const detail::placeholder<2> _2;
+extern const detail::placeholder<3> _3;
+extern const detail::placeholder<4> _4;
+extern const detail::placeholder<5> _5;
+extern const detail::placeholder<6> _6;
+extern const detail::placeholder<7> _7;
+extern const detail::placeholder<8> _8;
+extern const detail::placeholder<9> _9;
+extern const detail::placeholder<10> _10;
+extern const detail::placeholder<11> _11;
+extern const detail::placeholder<12> _12;
+extern const detail::placeholder<13> _13;
+extern const detail::placeholder<14> _14;
+extern const detail::placeholder<15> _15;
+extern const detail::placeholder<16> _16;
+extern const detail::placeholder<17> _17;
+extern const detail::placeholder<18> _18;
+extern const detail::placeholder<19> _19;
+extern const detail::placeholder<20> _20;
+extern const detail::placeholder<21> _21;
+extern const detail::placeholder<22> _22;
+extern const detail::placeholder<23> _23;
+extern const detail::placeholder<24> _24;
+extern const detail::placeholder<25> _25;
+extern const detail::placeholder<26> _26;
+extern const detail::placeholder<27> _27;
+extern const detail::placeholder<28> _28;
+extern const detail::placeholder<29> _29;
+extern const detail::placeholder<30> _30;
+extern const detail::placeholder<31> _31;
+extern const detail::placeholder<32> _32;
+
+} // namespace placeholders
+
+template <class _Tp>
+struct is_placeholder :
+    public integral_constant<int,0>
+{ };
+
+template <int Nm>
+struct is_placeholder<placeholders::detail::placeholder<Nm> > :
+    public integral_constant<int,Nm>
+{ };
+
+template <int Nm>
+struct is_placeholder<const placeholders::detail::placeholder<Nm> > :
+    public integral_constant<int,Nm>
+{ };
+
 template <class _Operation>
 class binder1st :
     public unary_function<typename _Operation::second_argument_type, typename _Operation::result_type>
@@ -444,9 +510,80 @@ inline binder2nd<_Operation> bind2nd(const _Operation& __fn, const _Tp& __x)
   return binder2nd<_Operation>(__fn, _Arg2_type(__x));
 }
 
+template <class Arg, class Result>
+class pointer_to_unary_function :
+    public unary_function<Arg,Result>
+{
+  public:
+    explicit pointer_to_unary_function( Result (*f)(Arg) ) :
+        _fn( f )
+      { }
+
+    Result operator()(Arg x) const
+      { return _fn( _STLP_STD::forward<Arg>(x) ); }
+
+  private:
+    Result (*_fn)(Arg);
+};
+
+template <class Arg>
+class pointer_to_unary_function<Arg,void> :
+    public unary_function<Arg,void>
+{
+  public:
+    explicit pointer_to_unary_function( void (*f)(Arg) ) :
+        _fn( f )
+      { }
+
+    void operator()(Arg x) const
+      { _fn( _STLP_STD::forward<Arg>(x) ); }
+
+  private:
+    void (*_fn)(Arg);
+};
+
+template <class Arg, class Result>
+pointer_to_unary_function<Arg,Result> ptr_fun(Result (*f)(Arg))
+{ return pointer_to_unary_function<Arg,Result>(f); }
+
+template <class Arg1, class Arg2, class Result>
+class pointer_to_binary_function :
+    public binary_function<Arg1,Arg2,Result>
+{
+  public:
+    explicit pointer_to_binary_function( Result (*f)(Arg1, Arg2) ) :
+        _fn( f )
+      { }
+
+    Result operator()(Arg1 x, Arg2 y) const
+      { return _fn( _STLP_STD::forward<Arg1>(x), _STLP_STD::forward<Arg2>(y) ); }
+
+  private:
+    Result (*_fn)(Arg1, Arg2);
+};
+
+template <class Arg1, class Arg2>
+class pointer_to_binary_function<Arg1,Arg2,void> :
+    public binary_function<Arg1,Arg2,void>
+{
+  public:
+    explicit pointer_to_binary_function( void (*f)(Arg1, Arg2) ) :
+        _fn( f )
+      { }
+
+    void operator()(Arg1 x, Arg2 y) const
+      { _fn( _STLP_STD::forward<Arg1>(x), _STLP_STD::forward<Arg2>(y) ); }
+
+  private:
+    void (*_fn)(Arg1, Arg2);
+};
+
+template <class Arg1, class Arg2, class Result>
+pointer_to_binary_function<Arg1,Arg2,Result> ptr_fun(Result (*f)(Arg1, Arg2))
+{ return pointer_to_binary_function<Arg1,Arg2,Result>(f); }
+
 #if !defined (_STLP_NO_EXTENSIONS)
 // unary_compose and binary_compose (extensions, not part of the standard).
-
 template <class _Operation1, class _Operation2>
 class unary_compose :
     public unary_function<typename _Operation2::argument_type, typename _Operation1::result_type>

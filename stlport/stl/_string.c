@@ -32,10 +32,6 @@
 #  include <stl/_ctraits_fns.h>
 #endif
 
-#ifndef _STLP_INTERNAL_FUNCTION_H
-#  include <stl/_function.h>
-#endif
-
 #if defined (_STLP_USE_MSVC6_MEM_T_BUG_WORKAROUND)
 #  define basic_string _STLP_NO_MEM_T_NAME(str)
 #elif defined (_STLP_DEBUG)

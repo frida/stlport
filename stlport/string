@@ -19,6 +19,8 @@
 #ifndef _STLP_STRING
 #define _STLP_STRING
 
+#include <functional>
+
 #ifndef _STLP_OUTERMOST_HEADER_ID
 #  define _STLP_OUTERMOST_HEADER_ID 0x68
 #  include <stl/_prolog.h>

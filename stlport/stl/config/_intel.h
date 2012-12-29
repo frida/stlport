@@ -27,10 +27,6 @@
 
 #include <stl/config/_msvc.h>
 
-#if defined (_STLP_DONT_RETURN_VOID)
-#  undef _STLP_DONT_RETURN_VOID
-#endif
-
 #if (__ICL < 900)
 #  define _STLP_NOTHROW
 #endif

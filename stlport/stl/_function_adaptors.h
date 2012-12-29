@@ -57,12 +57,6 @@
 
 _STLP_BEGIN_NAMESPACE
 
-//This implementation will only be used if needed, that is to say when there is the return void bug
-//and when there is no partial template specialization
-#if defined (_STLP_DONT_RETURN_VOID) && defined (_STLP_NO_CLASS_PARTIAL_SPECIALIZATION)
-
-#else
-
 template <class _Ret, class _Tp>
 class mem_fun_t : public unary_function<_Tp*,_Ret> {
   typedef _Ret (_Tp::*__fun_type)(void);
@@ -144,7 +138,6 @@ private:
   __fun_type _M_f;
 };
 
-#  if defined (_STLP_DONT_RETURN_VOID) && !defined (_STLP_NO_CLASS_PARTIAL_SPECIALIZATION)
 //Partial specializations for the void type
 template <class _Tp>
 class mem_fun_t<void, _Tp> : public unary_function<_Tp*,void> {
@@ -228,10 +221,6 @@ public:
 private:
   __fun_type _M_f;
 };
-
-#  endif
-
-#endif
 
 #if !defined (_STLP_MEMBER_POINTER_PARAM_BUG)
 // Mem_fun adaptor helper functions.  There are only two:

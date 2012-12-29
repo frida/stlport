@@ -125,7 +125,6 @@ work, 7.0 is still unknown (we assume it works until negative report). */
 #    define _STLP_NO_USING_FOR_GLOBAL_FUNCTIONS 1
 /*#    endif */
 #    define _STLP_DONT_USE_BOOL_TYPEDEF 1
-#    define _STLP_DONT_RETURN_VOID 1
 #  endif
 
 #endif /* _STLP_MSVC */

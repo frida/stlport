@@ -104,9 +104,6 @@
 // Define this if your compiler requires return statement after throw()
 // # define _STLP_THROW_RETURN_BUG 1
 
-// Define this if your compiler do not support return of void
-// # define _STLP_DONT_RETURN_VOID 1
-
 // Header <new> that comes with the compiler
 // does not define bad_alloc exception
 // #  define _STLP_NO_BAD_ALLOC  1
@@ -125,9 +122,6 @@
 
 // Compiler does not accept friend declaration qualified with namespace name.
 // #  define _STLP_NO_QUALIFIED_FRIENDS 1
-
-// Uncomment if partial specialization is not available
-// #  define _STLP_NO_CLASS_PARTIAL_SPECIALIZATION 1
 
 // Define if class being partially specialized require full name (template parameters)
 // of itself for method declarations

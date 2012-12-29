@@ -114,9 +114,6 @@
 #  if (__EDG_VERSION__ >= 244) && !defined (_STLP_HAS_INCLUDE_NEXT)
 #    define _STLP_HAS_INCLUDE_NEXT
 #  endif
-#  if (__EDG_VERSION__ <= 240) && !defined (_STLP_DONT_RETURN_VOID)
-#    define _STLP_DONT_RETURN_VOID
-#  endif
 #  if !defined (__EXCEPTIONS) && !defined (_STLP_HAS_NO_EXCEPTIONS)
 #    define _STLP_HAS_NO_EXCEPTIONS
 #  endif
@@ -125,7 +122,7 @@
 #  endif
 #endif
 
-#if !defined (_STLP_NO_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
+#if !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 #  define _STLP_CLASS_PARTIAL_SPECIALIZATION 1
 #endif
 
@@ -149,7 +146,7 @@
 #endif
 
 #if defined (_STLP_USE_PTR_SPECIALIZATIONS) && \
-    (defined (_STLP_NO_CLASS_PARTIAL_SPECIALIZATION) && defined (_STLP_DONT_SIMULATE_PARTIAL_SPEC_FOR_TYPE_TRAITS))
+    defined (_STLP_DONT_SIMULATE_PARTIAL_SPEC_FOR_TYPE_TRAITS)
 #  error Sorry but according the STLport settings your compiler can not support the pointer specialization feature.
 #endif
 

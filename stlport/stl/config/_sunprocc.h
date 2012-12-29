@@ -25,7 +25,6 @@
 
 #if (__SUNPRO_CC < 0x530)
 // those are tested and proved not to work...
-#  define _STLP_NO_CLASS_PARTIAL_SPECIALIZATION 1
 #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1 /* support removed */
 #endif
 

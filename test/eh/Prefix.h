@@ -175,7 +175,7 @@ _STLP_END_NAMESPACE
 
 # define EH_BIT_VECTOR_IMPLEMENTED
 
-# if defined(_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined(_STLP_NO_BOOL)
+# if !defined(_STLP_NO_BOOL)
 #  define EH_BIT_VECTOR EH_STD::vector<bool, eh_allocator(bool) >
 # else
 #  ifdef _STLP_NO_BOOL

@@ -770,8 +770,6 @@ inline void _STLP_CALL swap( forward_list<_Tp,_Alloc>& x, forward_list<_Tp,_Allo
 { x.swap( y ); }
 
 #if 0
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-
 // Specialization of insert_iterator so that insertions will be constant
 // time rather than linear time.
 template <class _Tp, class _Alloc>
@@ -805,7 +803,6 @@ class insert_iterator<forward_list<_Tp, _Alloc> >
   insert_iterator<_Container>& operator++() { return *this; }
   insert_iterator<_Container>& operator++(int) { return *this; }
 };
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
 #endif // 0
 
 _STLP_END_NAMESPACE

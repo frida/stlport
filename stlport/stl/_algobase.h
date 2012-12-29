@@ -347,42 +347,6 @@ inline _OutputIter copy_backward( _InputIter __first, _InputIter __last,
                                          integral_constant<bool, is_pointer<_InputIter>::value && is_pointer<_OutputIter>::value>() );
 }
 
-#if !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_SIMULATE_PARTIAL_SPEC_FOR_TYPE_TRAITS)
-#  define _STLP_DECLARE_COPY_TRIVIAL(_Tp)                                       \
-inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result)          \
-{ return (_Tp*)_STLP_PRIV __copy_trivial(__first, __last, __result); }          \
-inline _Tp* copy_backward(const _Tp* __first, const _Tp* __last, _Tp* __result) \
-{ return (_Tp*)_STLP_PRIV __copy_trivial_backward(__first, __last, __result); }
-
-#  if !defined (_STLP_NO_BOOL)
-_STLP_DECLARE_COPY_TRIVIAL(bool)
-#  endif
-_STLP_DECLARE_COPY_TRIVIAL(char)
-#  if !defined (_STLP_NO_SIGNED_BUILTINS)
-_STLP_DECLARE_COPY_TRIVIAL(signed char)
-#  endif
-_STLP_DECLARE_COPY_TRIVIAL(unsigned char)
-_STLP_DECLARE_COPY_TRIVIAL(short)
-_STLP_DECLARE_COPY_TRIVIAL(unsigned short)
-_STLP_DECLARE_COPY_TRIVIAL(int)
-_STLP_DECLARE_COPY_TRIVIAL(unsigned int)
-_STLP_DECLARE_COPY_TRIVIAL(long)
-_STLP_DECLARE_COPY_TRIVIAL(unsigned long)
-#  if !defined(_STLP_NO_WCHAR_T) && !defined (_STLP_WCHAR_T_IS_USHORT)
-_STLP_DECLARE_COPY_TRIVIAL(wchar_t)
-#  endif
-#  if defined (_STLP_LONG_LONG)
-_STLP_DECLARE_COPY_TRIVIAL(_STLP_LONG_LONG)
-_STLP_DECLARE_COPY_TRIVIAL(unsigned _STLP_LONG_LONG)
-#  endif
-_STLP_DECLARE_COPY_TRIVIAL(float)
-_STLP_DECLARE_COPY_TRIVIAL(double)
-#  if !defined (_STLP_NO_LONG_DOUBLE)
-_STLP_DECLARE_COPY_TRIVIAL(long double)
-#  endif
-#  undef _STLP_DECLARE_COPY_TRIVIAL
-#endif
-
 _STLP_MOVE_TO_PRIV_NAMESPACE
 
 template <class _InputIter, class _Size, class _OutputIter>

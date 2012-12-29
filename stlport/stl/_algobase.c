@@ -406,8 +406,7 @@ _ForwardIter1 __find_end(_ForwardIter1 __first1, _ForwardIter1 __last1,
 
 _STLP_MOVE_TO_STD_NAMESPACE
 
-// find_end for bidirectional iterators.  Requires partial specialization.
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
+// find_end for bidirectional iterators.
 
 #  ifndef _STLP_INTERNAL_ITERATOR_H
 _STLP_END_NAMESPACE
@@ -441,7 +440,6 @@ _BidirectionalIter1 __find_end(_BidirectionalIter1 __first1, _BidirectionalIter1
 }
 
 _STLP_MOVE_TO_STD_NAMESPACE
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
 
 template <class _ForwardIter1, class _ForwardIter2, class _BinaryPredicate>
 _ForwardIter1 find_end(_ForwardIter1 __first1, _ForwardIter1 __last1,

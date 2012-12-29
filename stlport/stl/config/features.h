@@ -122,10 +122,6 @@
 #  endif
 #endif
 
-#if !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-#  define _STLP_CLASS_PARTIAL_SPECIALIZATION 1
-#endif
-
 #if !defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER) && !defined (_STLP_NO_FUNCTION_TMPL_PARTIAL_ORDER)
 #  define _STLP_FUNCTION_TMPL_PARTIAL_ORDER 1
 #endif
@@ -647,29 +643,13 @@ namespace _STL = _STLP_STD_NAME;
 #  define _STLP_OPERATOR_TEMPLATE _STLP_TEMPLATE_NULL
 #endif
 
-#ifndef _STLP_CLASS_PARTIAL_SPECIALIZATION
-/* unless we have other compiler problem, try simulating partial spec here */
-#  if !defined (_STLP_DONT_SIMULATE_PARTIAL_SPEC_FOR_TYPE_TRAITS)
-#    define _STLP_SIMULATE_PARTIAL_SPEC_FOR_TYPE_TRAITS
-#  endif
-#endif
-
 #ifndef _STLP_NO_EXPLICIT_FUNCTION_TMPL_ARGS
 #  define _STLP_NULL_TMPL_ARGS <>
 # else
 #  define _STLP_NULL_TMPL_ARGS
 #endif
 
-#if !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-#  if !(defined (_STLP_NO_ARROW_OPERATOR)) && \
-       !defined (_STLP_NO_MSVC50_COMPATIBILITY) && !defined (_STLP_MSVC50_COMPATIBILITY)
-/* this one is needed for proper reverse_iterator<> operator ->() handling */
-#    define _STLP_MSVC50_COMPATIBILITY 1
-#  endif
-#endif
-
-#if defined ( _STLP_CLASS_PARTIAL_SPECIALIZATION )
-#  if (defined(__IBMCPP__) && (500 <= __IBMCPP__) && (__IBMCPP__ < 600) )
+#if (defined(__IBMCPP__) && (500 <= __IBMCPP__) && (__IBMCPP__ < 600) )
 #    define _STLP_DECLARE_REVERSE_ITERATORS(__reverse_iterator) \
    typedef typename _STLP_STD :: reverse_iterator<const_iterator> const_reverse_iterator; \
    typedef typename _STLP_STD :: reverse_iterator<iterator> reverse_iterator
@@ -681,23 +661,7 @@ namespace _STL = _STLP_STD_NAME;
 #    define _STLP_DECLARE_REVERSE_ITERATORS(__reverse_iterator) \
    typedef _STLP_STD::reverse_iterator<const_iterator> const_reverse_iterator; \
    typedef _STLP_STD::reverse_iterator<iterator> reverse_iterator
-#  endif
-#else /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
-#  if defined (_STLP_MSVC50_COMPATIBILITY)
-#    define _STLP_DECLARE_REVERSE_ITERATORS(__reverse_iterator) \
-  typedef _STLP_STD::__reverse_iterator<const_iterator, value_type, const_reference, \
-    const_pointer, difference_type>  const_reverse_iterator; \
-  typedef _STLP_STD::__reverse_iterator<iterator, value_type, reference, pointer, difference_type> \
-    reverse_iterator
-#  else
-#    define _STLP_DECLARE_REVERSE_ITERATORS(__reverse_iterator) \
-  typedef _STLP_STD::__reverse_iterator<const_iterator, value_type, const_reference, \
-    difference_type>  const_reverse_iterator; \
-  typedef _STLP_STD::__reverse_iterator<iterator, value_type, \
-    reference, difference_type> \
-    reverse_iterator
-#  endif
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
+#endif
 
 #define _STLP_DECLARE_BIDIRECTIONAL_REVERSE_ITERATORS \
         _STLP_DECLARE_REVERSE_ITERATORS(reverse_bidirectional_iterator)
@@ -996,7 +960,7 @@ typedef int bool;
 /* Activation of the partial template workaround:
  */
 #if !defined(_STLP_DONT_USE_PARTIAL_SPEC_WRKD) &&\
-   (!defined(_STLP_CLASS_PARTIAL_SPECIALIZATION) || !defined(_STLP_FUNCTION_TMPL_PARTIAL_ORDER))
+    !defined(_STLP_FUNCTION_TMPL_PARTIAL_ORDER)
 #  define _STLP_USE_PARTIAL_SPEC_WORKAROUND
 #endif
 

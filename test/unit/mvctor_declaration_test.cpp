@@ -109,7 +109,6 @@ namespace std {
                      struct_with_specialized_less const&) const;
   };
 
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 #    if !defined (_STLP_NO_MOVE_SEMANTIC)
 #      if defined (__BORLANDC__) && (__BORLANDC__ >= 0x564)
   _STLP_TEMPLATE_NULL
@@ -149,7 +148,6 @@ namespace std {
   };
 #      endif
 #    endif
-#  endif
 
 #  if defined (_STLP_USE_NAMESPACES)
 }
@@ -165,18 +163,10 @@ void MoveConstructorTest::movable_declaration()
   {
     //string, wstring:
     CPPUNIT_ASSERT( is_movable(string()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(string()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(string()) );
-#  endif
 #  if defined (_STLP_HAS_WCHAR_T)
     CPPUNIT_ASSERT( is_movable(wstring()) );
-#    if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(wstring()) );
-#    else
-    CPPUNIT_ASSERT( !is_move_complete(wstring()) );
-#    endif
 #  endif
   }
 
@@ -184,18 +174,10 @@ void MoveConstructorTest::movable_declaration()
   {
     //crope, wrope:
     CPPUNIT_ASSERT( is_movable(crope()) );
-#    if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(crope()) );
-#    else
-    CPPUNIT_ASSERT( !is_move_complete(crope()) );
-#    endif
 #    if defined (_STLP_HAS_WCHAR_T)
     CPPUNIT_ASSERT( is_movable(wrope()) );
-#      if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(wrope()) );
-#      else
-    CPPUNIT_ASSERT( !is_move_complete(wrope()) );
-#      endif
 #    endif
   }
 #  endif
@@ -204,72 +186,48 @@ void MoveConstructorTest::movable_declaration()
     //vector:
     CPPUNIT_ASSERT( is_movable(vector<char>()) );
     CPPUNIT_ASSERT( is_movable(vector<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(vector<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(vector<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(vector<char>()) );
-#  endif
   }
 
   {
     //deque:
     CPPUNIT_ASSERT( is_movable(deque<char>()) );
     CPPUNIT_ASSERT( is_movable(deque<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(deque<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(deque<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(deque<char>()) );
-#  endif
   }
 
   {
     //list:
     CPPUNIT_ASSERT( is_movable(list<char>()) );
     CPPUNIT_ASSERT( is_movable(list<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(list<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(list<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(list<char>()) );
-#  endif
   }
 
   {
     //forward_list:
     CPPUNIT_ASSERT( is_movable(forward_list<char>()) );
     CPPUNIT_ASSERT( is_movable(forward_list<specially_allocated_struct>()) );
-#    if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(forward_list<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(forward_list<specially_allocated_struct>()) );
-#    else
-    CPPUNIT_ASSERT( !is_move_complete(forward_list<char>()) );
-#    endif
   }
 
   {
     //queue:
     CPPUNIT_ASSERT( is_movable(queue<char>()) );
     CPPUNIT_ASSERT( is_movable(queue<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(queue<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(queue<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(queue<char>()) );
-#  endif
   }
 
   {
     //stack:
     CPPUNIT_ASSERT( is_movable(stack<char>()) );
     CPPUNIT_ASSERT( is_movable(stack<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(stack<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(stack<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(stack<char>()) );
-#  endif
   }
 
 #endif
@@ -284,54 +242,36 @@ void MoveConstructorTest::movable_declaration_assoc()
 
     //For associative containers it is important that less is correctly recognize as
     //the STLport less or a user specialized less:
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(less<char>()) );
-#  endif
     CPPUNIT_ASSERT( !is_move_complete(less<struct_with_specialized_less>()) );
 
     //set
     CPPUNIT_ASSERT( is_movable(set<char>()) );
     CPPUNIT_ASSERT( is_movable(set<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(set<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(set<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(set<char>()) );
-#  endif
 
     //multiset
     CPPUNIT_ASSERT( is_movable(multiset<char>()) );
     CPPUNIT_ASSERT( is_movable(multiset<specially_allocated_struct>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(multiset<char>()) );
     CPPUNIT_ASSERT( !is_move_complete(multiset<specially_allocated_struct>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(multiset<char>()) );
-#  endif
 
     //map
     CPPUNIT_ASSERT( is_movable(map<char, char>()) );
     CPPUNIT_ASSERT( is_movable(map<specially_allocated_struct, char>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(map<char, char>()) );
     //Here even if allocator has been specialized for specially_allocated_struct
     //this pecialization won't be used in default map instanciation as the default
     //allocator is allocator<pair<specially_allocated_struct, char> >
     CPPUNIT_ASSERT( is_move_complete(map<specially_allocated_struct, char>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(map<char, char>()) );
-#  endif
 
     //multimap
     CPPUNIT_ASSERT( is_movable(multimap<char, char>()) );
     CPPUNIT_ASSERT( is_movable(multimap<specially_allocated_struct, char>()) );
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     CPPUNIT_ASSERT( is_move_complete(multimap<char, char>()) );
     //Idem map remark
     CPPUNIT_ASSERT( is_move_complete(multimap<specially_allocated_struct, char>()) );
-#  else
-    CPPUNIT_ASSERT( !is_move_complete(multimap<char, char>()) );
-#  endif
   }
 #endif
 }

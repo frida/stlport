@@ -70,7 +70,6 @@ char _UseConstVolatileVoidPtrStorageType(const __false_type& /*POD*/, const _Tp&
 char _UseConstVolatileVoidPtrStorageType(const __true_type& /*POD*/, ...);
 char* _UseConstVolatileVoidPtrStorageType(const __true_type& /*POD*/, _ConstVolatileVoidPointerShim);
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 /* Thanks to class partial specialization the pointer specialization feature can even be used in
  * presence of incomplete type:
  * struct MyStruct {
@@ -137,48 +136,6 @@ struct _StorageType<_Tp const volatile*> {
                             void*,
                             const volatile _Tp*>::_Ret _Type;
 };
-#else
-template <class _Tp>
-struct _StorageType {
-  typedef typename __type_traits<_Tp>::is_POD_type _PODType;
-
-#if !defined (__BORLANDC__) || (__BORLANDC__ != 0x560)
-  static _Tp __null_rep();
-#else
-  static _Tp __null_rep;
-#endif
-  enum { use_void_ptr = (sizeof(_UseVoidPtrStorageType(_PODType(), __null_rep())) == sizeof(char*)) };
-  enum { use_const_void_ptr = (sizeof(_UseConstVoidPtrStorageType(_PODType(), __null_rep())) == sizeof(char*)) };
-  enum { use_volatile_void_ptr = (sizeof(_UseVolatileVoidPtrStorageType(_PODType(), __null_rep())) == sizeof(char*)) };
-  enum { use_const_volatile_void_ptr = (sizeof(_UseConstVolatileVoidPtrStorageType(_PODType(), __null_rep())) == sizeof(char*)) };
-
-  typedef typename __select<!use_const_volatile_void_ptr,
-                            _Tp,
-          typename __select<use_void_ptr,
-                            void*,
-          typename __select<use_const_void_ptr,
-                            const void*,
-          typename __select<use_volatile_void_ptr,
-                            volatile void*,
-                            const volatile void*>::_Ret >::_Ret >::_Ret >::_Ret _QualifiedType;
-
-#if !defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-  /* If the compiler do not support the iterator_traits structure we cannot wrap
-   * iterators pass to container template methods. The iterator dereferenced value
-   * has to be storable without any cast in the chosen storage type. To guaranty
-   * that the void pointer has to be correctly qualified.
-   */
-  typedef _QualifiedType _Type;
-#else
-  /* With iterator_traits we can wrap passed iterators and make the necessary casts.
-   * We can always use a simple void* storage type:
-   */
-  typedef typename __select<use_const_volatile_void_ptr,
-                            void*,
-                            _Tp>::_Ret _Type;
-#endif
-};
-#endif
 
 template <class _Tp, class _Compare>
 struct _AssocStorageTypes {
@@ -196,8 +153,6 @@ struct _AssocStorageTypes {
                             _Compare>::_Ret _CompareStorageType;
 };
 
-
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 /*
  * Base struct to deal with qualifiers
  */
@@ -391,43 +346,6 @@ private:
 template <class _Tp, class _Iterator>
 struct _IteWrapper<_Tp, _Tp, _Iterator>
 { typedef _Iterator _Ite; };
-
-#else
-
-/*
- * In this config the storage type is qualified in respect of the
- * value_type qualification. Simple reinterpret_cast is enough.
- */
-template <class _StorageT, class _ValueT>
-struct _CastTraits {
-  typedef _StorageT storage_type;
-  typedef _ValueT value_type;
-
-  static value_type * to_value_type_ptr(storage_type *__ptr)
-  { return __REINTERPRET_CAST(value_type*, __ptr); }
-  static value_type const* to_value_type_cptr(storage_type const*__ptr)
-  { return __REINTERPRET_CAST(value_type const*, __ptr); }
-  static value_type ** to_value_type_pptr(storage_type **__ptr)
-  { return __REINTERPRET_CAST(value_type **, __ptr); }
-  static value_type & to_value_type_ref(storage_type &__ref)
-  { return __REINTERPRET_CAST(value_type&, __ref); }
-  static value_type const& to_value_type_cref(storage_type const&__ref)
-  { return __REINTERPRET_CAST(value_type const&, __ref); }
-  // Reverse versions
-  static storage_type * to_storage_type_ptr(value_type *__ptr)
-  { return __REINTERPRET_CAST(storage_type*, __ptr); }
-  static storage_type const* to_storage_type_cptr(value_type const*__ptr)
-  { return __REINTERPRET_CAST(storage_type const*, __ptr); }
-  static storage_type ** to_storage_type_pptr(value_type **__ptr)
-  { return __REINTERPRET_CAST(storage_type **, __ptr); }
-  static storage_type const& to_storage_type_cref(value_type const&__ref)
-  { return __REINTERPRET_CAST(storage_type const&, __ref); }
-  template <class _Tp1>
-  static _Tp1 const& to_storage_type_crefT(_Tp1 const& __ref)
-  { return __ref; }
-};
-
-#endif
 
 //Wrapper functors:
 template <class _StorageT, class _ValueT, class _UnaryPredicate>

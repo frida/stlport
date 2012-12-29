@@ -294,7 +294,6 @@ public:
 // Specialization of insert_iterator so that it will work for unordered_map
 // and unordered_multimap.
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 #  if !defined (_STLP_NO_MOVE_SEMANTIC)
 
 template <class _Key, class _Tp, class _HashFn,  class _EqKey, class _Alloc>
@@ -371,8 +370,6 @@ public:
   insert_iterator<_Container>& operator++() { return *this; }
   insert_iterator<_Container>& operator++(int) { return *this; }
 };
-
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
 
 _STLP_END_NAMESPACE
 

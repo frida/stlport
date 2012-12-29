@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2011-04-29 17:31:47 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:39:45 ptr>
 
 /*
  * Copyright (c) 2004-2010
@@ -416,10 +416,6 @@ int EXAM_IMPL(deque_test::init_range)
   return EXAM_RESULT;
 }
 
-#if (!defined (STLPORT) || \
-    (!defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION))) && \
-     (!defined (_MSC_VER) || (_MSC_VER > 1400)) && \
-     (!defined(__GNUC__) || (__GNUC__ < 4) || (__GNUC_MINOR__ < 3))
 /* Simple compilation test: Check that nested types like iterator
  * can be access even if type used to instanciate container is not
  * yet completely defined.
@@ -429,7 +425,6 @@ class IncompleteClass
   deque<IncompleteClass> instances;
   typedef deque<IncompleteClass>::size_type size;
 };
-#endif
 
 int EXAM_IMPL(queue_test::pqueue1)
 {

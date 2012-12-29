@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-03-20 23:48:36 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:13:51 ptr>
 
 /*
  * Copyright (c) 2004-2009, 2010
@@ -488,8 +488,6 @@ int EXAM_IMPL(list_test::adl)
   return EXAM_RESULT;
 }
 
-#if !defined (STLPORT) || \
-    !defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 /* Simple compilation test: Check that nested types like iterator
  * can be access even if type used to instanciate container is not
  * yet completely defined.
@@ -499,7 +497,6 @@ class IncompleteClass
   list<IncompleteClass> instances;
   typedef list<IncompleteClass>::iterator it;
 };
-#endif
 
 int EXAM_IMPL(list_test::insert)
 {

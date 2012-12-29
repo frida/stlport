@@ -1002,7 +1002,7 @@ _STLP_EXPORT_TEMPLATE_CLASS basic_string<wchar_t, char_traits<wchar_t>, allocato
 
 #if defined (basic_string)
 _STLP_MOVE_TO_STD_NAMESPACE
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_NO_MOVE_SEMANTIC)
+#  if !defined (_STLP_NO_MOVE_SEMANTIC)
 
 #    if !defined (_STLP_USE_SHORT_STRING_OPTIM)
 template <class _CharT, class _Traits, class _Alloc>
@@ -1019,7 +1019,7 @@ struct __has_move_constructor<_STLP_PRIV basic_string<_CharT, _Traits, _Alloc> >
 #  endif
 #  undef basic_string
 #else // basic_string
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_NO_MOVE_SEMANTIC)
+#  if !defined (_STLP_NO_MOVE_SEMANTIC)
 #    if !defined (_STLP_USE_SHORT_STRING_OPTIM)
 template <class _CharT, class _Traits, class _Alloc>
 struct __has_trivial_move<basic_string<_CharT, _Traits, _Alloc> > :

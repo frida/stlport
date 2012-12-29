@@ -143,7 +143,6 @@ int EXAM_IMPL(iter_test::iterswp3)
   //iter_swap(cvvints.begin(), lvints.begin());
   //iter_swap(lvints.begin(), cvvints.begin());
 
-#if defined (STLPORT) && defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
   int *pvvint = &vvints.front().front();
   int *plvint = &lvints.front().front();
 
@@ -151,7 +150,6 @@ int EXAM_IMPL(iter_test::iterswp3)
   //Check that elements have been swaped:
   EXAM_CHECK( pvvint == &lvints.front().front() );
   EXAM_CHECK( plvint == &vvints.front().front() );
-#endif
 
   return EXAM_RESULT;
 }

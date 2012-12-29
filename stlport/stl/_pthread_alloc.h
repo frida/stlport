@@ -329,8 +329,6 @@ inline bool operator!=(const per_thread_allocator<_T1>& __a1,
 { return __a1._M_state != __a2._M_state; }
 #endif
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-
 /*
 template <class _Tp>
 struct has_trivial_copy_constructor<per_thread_allocator<_Tp> > :
@@ -347,8 +345,6 @@ struct has_trivial_destructor<per_thread_allocator<_Tp> > :
     public true_type
 { };
 */
-
-#endif
 
 _STLP_END_NAMESPACE
 

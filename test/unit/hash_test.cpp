@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-03-19 17:39:58 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:11:55 ptr>
 
 /*
  * Copyright (c) 2004-2009
@@ -426,8 +426,7 @@ int EXAM_IMPL(hash_test::allocator_with_state)
   return EXAM_RESULT;
 }
 
-#if defined (STLPORT) && !defined (_STLP_NO_EXTENSIONS) && \
-   (!defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION))
+#if defined (STLPORT) && !defined (_STLP_NO_EXTENSIONS)
 #  if !defined (__DMC__)
 
 /* Simple compilation test: Check that nested types like iterator

@@ -131,11 +131,7 @@ private:
 // Class temporary_buffer is not part of the standard.  It is an extension.
 
 template <class _ForwardIterator,
-          class _Tp
-#ifdef _STLP_CLASS_PARTIAL_SPECIALIZATION
-                    = typename iterator_traits<_ForwardIterator>::value_type
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
-         >
+          class _Tp = typename iterator_traits<_ForwardIterator>::value_type>
 struct temporary_buffer : public _Temporary_buffer<_ForwardIterator, _Tp>
 {
   temporary_buffer(_ForwardIterator __first, _ForwardIterator __last)

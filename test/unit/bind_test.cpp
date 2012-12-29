@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <10/06/02 15:17:35 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 21:44:10 ptr>
 
 /*
  * Copyright (c) 2004-2009
@@ -95,8 +95,6 @@ int test_func2 (int &param1, int param2) {
 
 int EXAM_IMPL(bind_test::bind2nd3)
 {
-#if defined (STLPORT) && \
-    !defined (_STLP_NO_EXTENSIONS) && defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
   int array[3] = { 1, 2, 3 };
   transform(array, array + 3, array, bind2nd(ptr_fun(test_func1), 1));
   transform(array, array + 3, array, bind1st(ptr_fun(test_func1), -1));
@@ -108,9 +106,7 @@ int EXAM_IMPL(bind_test::bind2nd3)
   EXAM_CHECK(array[0] == 21);
   EXAM_CHECK(array[1] == 22);
   EXAM_CHECK(array[2] == 23);
-#else
-  throw exam::skip_exception();
-#endif
+
   return EXAM_RESULT;
 }
 
@@ -137,15 +133,11 @@ class A
 
 int EXAM_IMPL(bind_test::bind_memfn)
 {
-#if defined (STLPORT) && \
-    !defined (_STLP_NO_EXTENSIONS) && defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
   A array[3];
 
   for_each( array, array + 3, bind2nd( mem_fun_ref(&A::f), 12 ) );
 
   EXAM_CHECK( array[0].v() == 12 );
-#else
-  throw exam::skip_exception();
-#endif
+
   return EXAM_RESULT;
 }

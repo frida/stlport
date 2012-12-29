@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <10/06/02 15:17:35 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:14:39 ptr>
 
 /*
  * Copyright (c) 2004-2008
@@ -440,8 +440,6 @@ int EXAM_IMPL(map_test::template_methods)
   return EXAM_RESULT;
 }
 
-#if !defined (STLPORT) || \
-    !defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 #  if !defined (__DMC__)
 /* Simple compilation test: Check that nested types like iterator
  * can be access even if type used to instanciate container is not
@@ -455,4 +453,3 @@ class IncompleteClass
   typedef multimap<IncompleteClass, IncompleteClass>::iterator mit;
 };
 #  endif
-#endif

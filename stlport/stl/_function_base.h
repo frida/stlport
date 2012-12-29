@@ -30,10 +30,6 @@
 #ifndef _STLP_INTERNAL_FUNCTION_BASE_H
 #define _STLP_INTERNAL_FUNCTION_BASE_H
 
-// #if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_TYPE_TRAITS_H)
-// #  include <stl/type_traits.h>
-// #endif
-
 #include <type_traits>
 #include <utility>
 

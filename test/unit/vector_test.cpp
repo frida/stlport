@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2011-04-29 17:36:52 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:22:50 ptr>
 
 /*
  * Copyright (c) 2004-2009
@@ -527,8 +527,6 @@ int EXAM_IMPL(vector_test::iterators)
 }
 
 
-#if !defined (STLPORT) || \
-    !defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 /* Simple compilation test: Check that nested types like iterator
  * can be access even if type used to instanciate container is not
  * yet completely defined.
@@ -538,7 +536,6 @@ class IncompleteClass
   vector<IncompleteClass> instances;
   typedef vector<IncompleteClass>::iterator it;
 };
-#endif
 
 #if defined (STLPORT)
 #  define NOTHROW _STLP_NOTHROW

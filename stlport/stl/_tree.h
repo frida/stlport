@@ -693,7 +693,7 @@ public:
 
 _STLP_MOVE_TO_STD_NAMESPACE
 
-#  if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_NO_MOVE_SEMANTIC)
+#  if !defined (_STLP_NO_MOVE_SEMANTIC)
 
 template <class _Key, class _Compare, class _Value, class _KeyOfValue, class _Traits, class _Alloc>
 struct __has_trivial_move<_STLP_PRIV _Rb_tree<_Key, _Compare, _Value, _KeyOfValue, _Traits, _Alloc> > :
@@ -705,7 +705,7 @@ struct __has_move_constructor<_STLP_PRIV _Rb_tree<_Key, _Compare, _Value, _KeyOf
     public true_type
 { };
 
-#  endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
+#  endif /* */
 
 #if defined (_STLP_DEBUG)
 #  undef _Rb_tree

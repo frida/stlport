@@ -127,11 +127,7 @@ public:
   typedef typename _Container::const_iterator  _Const_iterator;
   typedef _Container                     _Container_type;
 
-#ifdef _STLP_CLASS_PARTIAL_SPECIALIZATION
   typedef typename iterator_traits<_Const_iterator>::iterator_category _Iterator_category;
-#else
-  typedef typename _Container::_Iterator_category  _Iterator_category;
-#endif
   typedef _Iterator_category iterator_category;
 
   _DBG_iter_base() : __owned_link(0)  {}
@@ -212,9 +208,7 @@ private:
 
 public:
 
-#ifdef _STLP_CLASS_PARTIAL_SPECIALIZATION
   typedef typename _Base::iterator_category iterator_category;
-#endif
   typedef typename _Base::_Iterator_category  _Iterator_category;
 
 public:

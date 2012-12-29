@@ -52,52 +52,42 @@ int EXAM_IMPL(mem_fun_ptr_test::mem_ptr_fun)
   ptr_fun(f1c)(s1);
   ptr_fun(f2c)(s1, s2);
 
-#ifndef _STLP_DONT_TEST_RETURN_VOID
   ptr_fun(vf1)(s1);
   ptr_fun(vf2)(s1, s2);
 
   ptr_fun(vf1c)(s1);
   ptr_fun(vf2c)(s1, s2);
-#endif /* _STLP_DONT_TEST_RETURN_VOID */
 
   // mem_fun
 
   mem_fun(&Class::f0)(&obj);
   mem_fun(&Class::f1)(&obj, s1);
 
-#ifndef _STLP_DONT_TEST_RETURN_VOID
   mem_fun(&Class::vf0)(&obj);
   mem_fun(&Class::vf1)(&obj, s1);
-#endif /* _STLP_DONT_TEST_RETURN_VOID */
 
   // mem_fun (const)
 
   mem_fun(&Class::f0c)(&objc);
   mem_fun(&Class::f1c)(&objc, s1);
 
-#ifndef _STLP_DONT_TEST_RETURN_VOID
   mem_fun(&Class::vf0c)(&objc);
   mem_fun(&Class::vf1c)(&objc, s1);
-#endif /* _STLP_DONT_TEST_RETURN_VOID */
 
   // mem_fun_ref
 
   mem_fun_ref(&Class::f0)(obj);
   mem_fun_ref(&Class::f1)(obj, s1);
 
-#ifndef _STLP_DONT_TEST_RETURN_VOID
   mem_fun_ref(&Class::vf0)(obj);
   mem_fun_ref(&Class::vf1)(obj, s1);
-#endif /* _STLP_DONT_TEST_RETURN_VOID */
 
   // mem_fun_ref (const)
   mem_fun_ref(&Class::f0c)(objc);
   mem_fun_ref(&Class::f1c)(objc, s1);
 
-#ifndef _STLP_DONT_TEST_RETURN_VOID
   mem_fun_ref(&Class::vf0c)(objc);
   mem_fun_ref(&Class::vf1c)(objc, s1);
-#endif /* _STLP_DONT_TEST_RETURN_VOID */
 
   return EXAM_RESULT;
 }
@@ -168,7 +158,6 @@ int EXAM_IMPL(mem_fun_ptr_test::find)
 {
 //This test require partial template specialization feature to avoid the
 //reference to reference problem. No workaround yet for limited compilers.
-#if !defined (STLPORT) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
   vector<V> v;
 
   v.push_back( V(1) );
@@ -198,12 +187,7 @@ int EXAM_IMPL(mem_fun_ptr_test::find)
   vector<V>::iterator k = find_if( v.begin(), v.end(), bind2nd( mem_fun_ref( &V::f ), 2 ) );
   EXAM_CHECK(k != v.end());
   EXAM_CHECK(k->v == 2);
-#else
-  throw exam::skip_exception();
-#endif
+
   return EXAM_RESULT;
 }
 
-#ifdef _STLP_DONT_TEST_RETURN_VOID
-#  undef _STLP_DONT_TEST_RETURN_VOID
-#endif

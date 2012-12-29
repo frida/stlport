@@ -57,12 +57,10 @@ struct iterator {
 _STLP_TEMPLATE_NULL
 struct iterator<output_iterator_tag, void, void, void, void> {
   typedef output_iterator_tag  iterator_category;
-#ifdef _STLP_CLASS_PARTIAL_SPECIALIZATION
   typedef void                value_type;
   typedef void                difference_type;
   typedef void                pointer;
   typedef void                reference;
-#endif
 };
 
 template <class _Iterator>

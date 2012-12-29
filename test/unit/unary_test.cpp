@@ -35,14 +35,11 @@ bool test_func(int param) {
 
 int EXAM_IMPL(unary_test::unegate3)
 {
-#if !defined (STLPORT) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
   int array [3] = { 1, 2, 3 };
   int* p = find_if((int*)array, (int*)array + 3, not1(ptr_fun(test_func)));
   EXAM_CHECK(p != array + 3);
   EXAM_CHECK(*p==3);
-#else
-  throw exam::skip_exception();
-#endif
+
   return EXAM_RESULT;
 }
 

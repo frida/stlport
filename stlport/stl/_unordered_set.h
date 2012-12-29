@@ -273,7 +273,6 @@ public:
 // Specialization of insert_iterator so that it will work for unordered_set
 // and unordered_multiset.
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
 #  if !defined (_STLP_NO_MOVE_SEMANTIC)
 
 template <class _Value, class _HashFn,  class _EqKey, class _Alloc>
@@ -350,7 +349,6 @@ public:
   insert_iterator<_Container>& operator++() { return *this; }
   insert_iterator<_Container>& operator++(int) { return *this; }
 };
-#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
 
 _STLP_END_NAMESPACE
 

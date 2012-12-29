@@ -706,9 +706,7 @@ class _STLP_CLASS_DECLSPEC allocator<void>
     typedef ptrdiff_t   difference_type;
     typedef void*       pointer;
     typedef const void* const_pointer;
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
     typedef void        value_type;
-#endif
     template <class _Tp1>
     struct rebind
     {
@@ -854,14 +852,10 @@ _STLP_MOVE_TO_PRIV_NAMESPACE
 
 _STLP_MOVE_TO_STD_NAMESPACE
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
-
 template <class T>
 struct __is_stateless_alloc :
     public integral_constant<bool,is_trivial<T>::value || is_empty<T>::value>
 { };
-
-#endif
 
 template <class _Tp> void swap(_Tp&, _Tp&);
 

@@ -278,7 +278,7 @@ protected:
 //  compiler support.  Otherwise, we define a class bit_vector which uses
 //  the default allocator.
 
-#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION) && !defined (_STLP_NO_BOOL) && !defined (__SUNPRO_CC)
+#if !defined (_STLP_NO_BOOL) && !defined (__SUNPRO_CC)
 #  define _STLP_VECBOOL_TEMPLATE
 #  define __BVEC_TMPL_HEADER template <class _Alloc>
 #else

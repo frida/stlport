@@ -1,4 +1,4 @@
-// -*- C++ -*- Time-stamp: <2012-04-21 08:34:10 ptr>
+// -*- C++ -*- Time-stamp: <2012-12-29 22:22:24 ptr>
 
 /*
  * Copyright (c) 2005-2012
@@ -669,8 +669,6 @@ int EXAM_IMPL(unordered_test::template_methods)
   return EXAM_RESULT;
 }
 
-#if defined (STLPORT) && \
-    (!defined (_STLP_USE_PTR_SPECIALIZATIONS) || defined (_STLP_CLASS_PARTIAL_SPECIALIZATION))
 /* Simple compilation test: Check that nested types like iterator
  * can be access even if type used to instanciate container is not
  * yet completely defined.
@@ -687,7 +685,6 @@ class IncompleteClass
   unordered_multimap<IncompleteClass, IncompleteClass> umminstances;
   typedef unordered_multimap<IncompleteClass, IncompleteClass>::iterator ummit;
 };
-#endif
 
 int EXAM_IMPL(unordered_test::remains)
 {

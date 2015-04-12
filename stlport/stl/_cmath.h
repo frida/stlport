@@ -179,7 +179,7 @@ double functions but cast the arguments and return values to the given type. */
 
 /** rough characterization of compiler and native C library
 For the compiler, it can either support long double or not. If it doesn't, the
-macro _STLP_NO_LONG_DOUBLE is not defined and we don't define any long double
+macro _STLP_NO_LONG_DOUBLE is defined and we don't define any long double
 overloads.
 For the native C library the question is whether it has variants with an 'f'
 suffix (for float as opposed to double) or an 'l' suffix (for long double). If
@@ -505,6 +505,24 @@ _STLP_DEF_MATH_INLINE2(hypot, _hypot)
 #endif
 
 #if defined (_STLP_IMPORT_VENDOR_CSTD) && !defined (_STLP_NO_CSTD_FUNCTION_IMPORTS)
+#if defined (__ANDROID__)
+namespace __captured {
+template<typename _Tp> inline int __capture_isfinite(_Tp __f) { return isfinite(__f); }
+template<typename _Tp> inline int __capture_isinf(_Tp __f) { return isinf(__f); }
+template<typename _Tp> inline int __capture_isnan(_Tp __f) { return isnan(__f); }
+template<typename _Tp> inline int __capture_signbit(_Tp __f) { return signbit(__f); }
+}
+#undef isfinite
+#undef isinf
+#undef isnan
+#undef signbit
+namespace __captured {
+template<typename _Tp> inline int isfinite(_Tp __f) { return __capture_isfinite(__f); }
+template<typename _Tp> inline int isinf(_Tp __f) { return __capture_isinf(__f); }
+template<typename _Tp> inline int isnan(_Tp __f) { return __capture_isnan(__f); }
+template<typename _Tp> inline int signbit(_Tp __f) { return __capture_signbit(__f); }
+}
+#endif
 _STLP_BEGIN_NAMESPACE
 using ::abs;
 using ::acos;
@@ -520,11 +538,19 @@ using ::floor;
 using ::fmod;
 using ::frexp;
 using ::hypot;
+#if defined (__ANDROID__)
+using __captured::isfinite;
+using __captured::isinf;
+using __captured::isnan;
+#endif
 using ::ldexp;
 using ::log;
 using ::log10;
 using ::modf;
 using ::pow;
+#if defined (__ANDROID__)
+using __captured::signbit;
+#endif
 using ::sin;
 using ::sinh;
 using ::sqrt;

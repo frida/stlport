@@ -393,6 +393,7 @@ inline double ldexp(double __x, int __y) { return __stlp_ldexp(__x, __y); }
  * HP-UX native lib has math functions in the global namespace.
  */
 #if (!defined (_STLP_MSVC_LIB) || (_STLP_MSVC_LIB < 1310) || defined(UNDER_CE)) && \
+    !defined (__QNX__) && \
     (!defined (__HP_aCC) || (__HP_aCC < 30000)) && \
     !defined (__WATCOMC__)
 inline double abs(double __x)
@@ -543,13 +544,24 @@ using __captured::isfinite;
 using __captured::isinf;
 using __captured::isnan;
 #endif
+#if defined (__QNX__)
+using ::isfinite;
+using ::isinf;
+using ::isnan;
+#endif
 using ::ldexp;
 using ::log;
 using ::log10;
+#if defined (__QNX__)
+using ::lrint;
+#endif
 using ::modf;
 using ::pow;
 #if defined (__ANDROID__)
 using __captured::signbit;
+#endif
+#if defined (__QNX__)
+using ::signbit;
 #endif
 using ::sin;
 using ::sinh;

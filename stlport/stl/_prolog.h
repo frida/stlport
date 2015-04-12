@@ -16,3 +16,7 @@
    !((_STLP_OUTERMOST_HEADER_ID >= 0x200) && (_STLP_OUTERMOST_HEADER_ID <= 0x300))
 #  include <stl/debug/_debug.h>
 #endif
+
+#if defined (__QNX__)
+#  define _ALT_NS 2
+#endif

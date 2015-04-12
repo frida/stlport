@@ -82,7 +82,7 @@ inline int _FILE_fd(const FILE *__f) { return __f->fd; }
 
 #elif defined (__QNXNTO__) || defined (__WATCOMC__) || defined (__EMX__)
 
-inline int _FILE_fd(const FILE *__f) { return __f->_handle; }
+inline int _FILE_fd(const FILE *__f) { return __f->_Handle; }
 
 #elif defined (__Lynx__)
 

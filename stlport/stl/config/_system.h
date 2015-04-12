@@ -71,6 +71,11 @@
 #  if defined (__GNUC__)
 #    include <stl/config/_gcc.h>
 #  endif
+#elif defined (__QNX__)
+#  include <stl/config/_qnx.h>
+#  if defined (__GNUC__)
+#    include <stl/config/_gcc.h>
+#  endif
 #elif defined (__FreeBSD__)
 #  include <stl/config/_freebsd.h>
 #  if defined (__clang__)

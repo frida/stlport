@@ -98,6 +98,8 @@ stdio_streambuf_base::seekoff(off_type off, ios_base::seekdir dir,
     // of a primitive type
 #if (defined (__GLIBC__) && ((__GLIBC__ > 2) || ((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 2))))
     return pos_type((streamoff)pos.__pos);
+#elif defined (__QNX__)
+    return pos_type(pos._Off);
 #elif defined (__ISCPP__) || defined (__MVS__) || defined (__OS400__)
     return pos_type(pos.__fpos_elem[ 0 ]);
 #elif defined (__EMX__)
@@ -128,6 +130,10 @@ stdio_streambuf_base::seekpos(pos_type pos, ios_base::openmode /* mode */) {
 #  else
   memset( &(p.__state), 0, sizeof(p.__state) );
 #  endif
+#elif defined (__QNX__)
+  FPOS_T p;
+  p._Off = pos;
+  memset( &(p._Wstate), 0, sizeof(p._Wstate) );
 #elif defined (__MVS__) || defined (__OS400__)
   FPOS_T p;
   p.__fpos_elem[0] = pos;

@@ -87,7 +87,7 @@
 #  endif
 #endif
 
-#if defined (__CYGWIN__) || defined (__MINGW32__) || !(defined (_STLP_USE_GLIBC) || defined (__sun) || defined(__APPLE__))
+#if defined (__CYGWIN__) || defined (__MINGW32__) || !(defined (_STLP_USE_GLIBC) || defined (__sun) || defined(__APPLE__) || defined(__QNX__))
 #  if !defined (__MINGW32__) && !defined (__CYGWIN__)
 #    define _STLP_NO_NATIVE_MBSTATE_T    1
 #  endif
@@ -117,6 +117,11 @@ typedef unsigned int wint_t;
 #  define _STLP_NO_VENDOR_STDLIB_L
 
 #endif /* __APPLE__ */
+
+#if defined (__QNX__)
+#  define __unix
+#  define _STLP_NO_VENDOR_STDLIB_L
+#endif /* __QNX__ */
 
 /* g++ 2.7.x and above */
 #define _STLP_LONG_LONG long long

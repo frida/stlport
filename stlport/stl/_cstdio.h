@@ -37,6 +37,12 @@ using _STLP_VENDOR_CSTD::FILE;
 using _STLP_VENDOR_CSTD::fpos_t;
 using _STLP_VENDOR_CSTD::size_t;
 
+#  if defined (__QNX__)
+using std::_Stdin;
+using std::_Stdout;
+using std::_Stderr;
+#  endif
+
 // undef obsolete macros
 #  undef putc
 #  undef getc
